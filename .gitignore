@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env/
+.env
+
+# VSCode
+.vscode/
+
+# Database
+*.db
+*.sqlite3
+
+# Vector DB / embeddings
+vectorstore/
+chroma_db/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build / cache
+dist/
+build/
+.cache/
+
+# Node
+node_modules/
+
+# Secrets
+*.pem
+*.key
+
+# Langchain / AI cache
+.cache

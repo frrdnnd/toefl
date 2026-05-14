@@ -1,0 +1,4 @@
+Subjects and verbs must agree in number.
+
+Singular subject → singular verb.
+Plural subject → plural verb.
