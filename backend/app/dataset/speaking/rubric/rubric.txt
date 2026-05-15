@@ -1,0 +1,6 @@
+Evaluate based on:
+- fluency
+- grammar
+- vocabulary
+- coherence
+- pronunciation

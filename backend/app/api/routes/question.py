@@ -41,6 +41,7 @@ class QuestionRequest(BaseModel):
 
 class EvaluationRequest(BaseModel):
     question: str
+    options: list[str]
     user_answer: str
     correct_answer: str
     category: str = "Grammar"
@@ -56,15 +57,7 @@ def generate_question(
     payload: QuestionRequest
 ):
 
-    # =========================
-    # GET RAG CONTEXT
-    # =========================
-
     context = get_context(payload.category)
-
-    # =========================
-    # AI PROMPT
-    # =========================
 
     prompt = f"""
 You are a professional TOEFL tutor AI.
@@ -108,17 +101,21 @@ FORMAT:
 }}
 """
 
-    # =========================
-    # ASK LLM
-    # =========================
-
-    response = ask_llm(prompt)
+    response = ask_llm(
+        question=prompt,
+        options="",
+        user_answer="",
+        correct_answer=""
+    )
 
     try:
 
+        # jika response dict AI tutor
+        if isinstance(response, dict):
+            raise Exception("Use fallback parser")
+
         cleaned = response.strip()
 
-        # Remove markdown block
         if cleaned.startswith("```json"):
             cleaned = cleaned.replace(
                 "```json",
@@ -138,7 +135,6 @@ FORMAT:
     except Exception as e:
 
         print("QUESTION GENERATION ERROR:", e)
-        print("RAW RESPONSE:", response)
 
         return {
             "question": "Choose the correct sentence.",
@@ -168,104 +164,50 @@ def evaluate_answer(
 ):
 
     # =========================
-    # GET RAG CONTEXT
+    # ASK AI TUTOR
     # =========================
-
-    context = get_context(payload.category)
-
     # =========================
-    # AI PROMPT
-    # =========================
+# GET FULL CORRECT OPTION
+# =========================
 
-    prompt = f"""
-You are an adaptive TOEFL evaluator AI.
+    correct_option = next(
+    (
+        opt for opt in payload.options
+        if opt.startswith(payload.correct_answer)
+    ),
+    payload.correct_answer
+)
+    parsed = ask_llm(
+    question=payload.question,
 
-Use the TOEFL material below.
+    options=payload.options,
 
-TOEFL MATERIAL:
-{context}
+    user_answer=payload.user_answer,
 
-QUESTION:
-{payload.question}
-
-CORRECT ANSWER:
-{payload.correct_answer}
-
-USER ANSWER:
-{payload.user_answer}
-
-TASK:
-Analyze the user's TOEFL answer.
-
-RULES:
-- Determine if answer is correct
-- Explain grammar issue
-- Detect weakness
-- Give improvement suggestion
-- Keep response educational
-- Keep response concise
-
-IMPORTANT:
-Return ONLY valid JSON.
-Do NOT include markdown.
-Do NOT include extra explanation.
-
-FORMAT:
-
-{{
-  "is_correct": true,
-  "analysis": "...",
-  "grammar_tip": "...",
-  "improvement": "...",
-  "weakness_detected": "..."
-}}
-"""
+correct_answer=correct_option)
 
     # =========================
-    # ASK LLM
+    # AUTO DETECT CORRECTNESS
     # =========================
 
-    response = ask_llm(prompt)
+    is_correct = (
+        payload.user_answer.strip().upper() ==
+        payload.correct_answer.strip().upper()
+    )
 
-    try:
+    # =========================
+    # FALLBACK SAFETY
+    # =========================
 
-        cleaned = response.strip()
+    if not isinstance(parsed, dict):
 
-        if cleaned.startswith("```json"):
-            cleaned = cleaned.replace(
-                "```json",
-                ""
-            ).replace(
-                "```",
-                ""
-            ).strip()
-
-        parsed = json.loads(cleaned)
-
-    except Exception as e:
-
-        print("EVALUATION ERROR:", e)
-        print("RAW RESPONSE:", response)
-
-        # fallback
         parsed = {
-            "is_correct": (
-                payload.user_answer ==
-                payload.correct_answer
-            ),
-            "analysis": (
-                "AI evaluation failed. "
-                "Using fallback evaluation."
-            ),
-            "grammar_tip": (
-                "Review grammar fundamentals."
-            ),
-            "improvement": (
-                "Practice more TOEFL questions."
-            ),
-            "weakness_detected": (
-                payload.category
-            )
+            "correct_answer": payload.correct_answer,
+            "translation": "Translation unavailable.",
+            "explanation": "AI explanation unavailable.",
+            "why_wrong": "Could not analyze answer.",
+            "grammar_tip": "Review grammar fundamentals.",
+            "toefl_tip": "Practice more TOEFL questions."
         }
 
     # =========================
@@ -277,12 +219,12 @@ FORMAT:
         difficulty=payload.difficulty,
         question=payload.question,
         user_answer=payload.user_answer,
-        correct_answer=payload.correct_answer,
-        is_correct=parsed["is_correct"],
-        analysis=parsed["analysis"],
+        correct_answer=correct_option,
+        is_correct=is_correct,
+        analysis=parsed["explanation"],
         grammar_tip=parsed["grammar_tip"],
-        improvement=parsed["improvement"],
-        weakness_detected=parsed["weakness_detected"]
+        improvement=parsed["toefl_tip"],
+        weakness_detected=payload.category
     )
 
     db.add(history)
@@ -293,4 +235,12 @@ FORMAT:
     # RETURN RESPONSE
     # =========================
 
-    return parsed
+    return {
+        "is_correct": is_correct,
+        "correct_answer": parsed["correct_answer"],
+        "translation": parsed["translation"],
+        "explanation": parsed["explanation"],
+        "why_wrong": parsed["why_wrong"],
+        "grammar_tip": parsed["grammar_tip"],
+        "toefl_tip": parsed["toefl_tip"]
+    }

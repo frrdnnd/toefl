@@ -9,14 +9,14 @@ import {
 
 const menus = [
   {
-    name: 'Dashboard',
-    icon: LayoutDashboard,
+    name: 'Practice',
+    icon: BookOpen,
     path: '/'
   },
   {
-    name: 'Practice',
-    icon: BookOpen,
-    path: '/practice'
+    name: 'Dashboard',
+    icon: LayoutDashboard,
+    path: '/Dashboard'
   },
   {
     name: 'History',

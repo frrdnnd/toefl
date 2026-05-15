@@ -9,14 +9,14 @@ import Settings from '@/pages/Settings.vue'
 const routes = [
   {
     path: '/',
-    name: 'Dashboard',
-    component: Dashboard
+    name: 'Practice',
+    component: Practice
   },
 
   {
-    path: '/practice',
-    name: 'Practice',
-    component: Practice
+    path: '/Dashboard',
+    name: 'Dashboard',
+    component: Dashboard
   },
 
   {
