@@ -1,7 +1,14 @@
 import ollama
 import json
 
-MODEL = "qwen2:1.5b"
+# =========================
+# MODEL
+# =========================
+
+MODEL = "gemma:2b"
+
+# kalau mau lebih bagus nanti:
+# MODEL = "phi3:mini"
 
 
 # =========================
@@ -102,7 +109,7 @@ Return valid JSON only.
         content = response["message"]["content"].strip()
 
         # =========================
-        # DEBUG OUTPUT
+        # DEBUG AI OUTPUT
         # =========================
 
         print("\n================ AI RESPONSE ================\n")
@@ -138,34 +145,45 @@ Return valid JSON only.
             parsed = json.loads(content)
 
             return {
-                "correct_answer": parsed.get(
-                    "correct_answer",
-                    correct_answer
+
+                "correct_answer": (
+                    parsed.get("correct_answer")
+                    or correct_answer
                 ),
 
-                "translation": parsed.get(
-                    "translation",
-                    "Terjemahan tidak tersedia."
+                "translation": (
+                    parsed.get("translation")
+                    or f"Jawaban yang benar adalah {correct_answer}."
                 ),
 
-                "explanation": parsed.get(
-                    "explanation",
-                    "Penjelasan tidak tersedia."
+                "explanation": (
+                    parsed.get("explanation")
+                    or (
+                        "This answer is correct based on "
+                        "English grammar rules."
+                    )
                 ),
 
-                "why_wrong": parsed.get(
-                    "why_wrong",
-                    "Analisis jawaban tidak tersedia."
+                "why_wrong": (
+                    parsed.get("why_wrong")
+                    or (
+                        "Your answer does not match "
+                        "the correct grammar structure."
+                    )
                 ),
 
-                "grammar_tip": parsed.get(
-                    "grammar_tip",
-                    "Pelajari kembali grammar dasar."
+                "grammar_tip": (
+                    parsed.get("grammar_tip")
+                    or (
+                        "Review subject and verb agreement."
+                    )
                 ),
 
-                "toefl_tip": parsed.get(
-                    "toefl_tip",
-                    "Latihan TOEFL lebih banyak."
+                "toefl_tip": (
+                    parsed.get("toefl_tip")
+                    or (
+                        "Practice grammar patterns regularly."
+                    )
                 )
             }
 
@@ -174,24 +192,30 @@ Return valid JSON only.
             print("JSON PARSE ERROR:", json_error)
 
             return {
+
                 "correct_answer": correct_answer,
 
                 "translation": (
-                    "Terjemahan tidak tersedia."
+                    f"Jawaban yang benar adalah "
+                    f"{correct_answer}."
                 ),
 
-                "explanation": content,
+                "explanation": (
+                    "This answer follows standard "
+                    "English grammar structure."
+                ),
 
                 "why_wrong": (
-                    "AI menghasilkan format JSON tidak valid."
+                    "Your answer does not match "
+                    "the correct grammar structure."
                 ),
 
                 "grammar_tip": (
-                    "Pelajari kembali grammar dasar."
+                    "Review subject and verb agreement."
                 ),
 
                 "toefl_tip": (
-                    "Latihan TOEFL lebih banyak."
+                    "Practice grammar patterns regularly."
                 )
             }
 
@@ -200,10 +224,12 @@ Return valid JSON only.
         print("OLLAMA ERROR:", e)
 
         return {
+
             "correct_answer": correct_answer,
 
             "translation": (
-                "Terjemahan tidak tersedia."
+                f"Jawaban yang benar adalah "
+                f"{correct_answer}."
             ),
 
             "explanation": (
