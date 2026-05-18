@@ -248,3 +248,51 @@ Return valid JSON only.
                 "Focus on grammar structure carefully."
             )
         }
+    
+def ask_llm_generate(prompt: str):
+    try:
+        response = ollama.chat(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": """
+You are a professional TOEFL question generator.
+
+Return ONLY valid JSON.
+Do NOT return markdown.
+Do NOT use ```json.
+Do NOT add extra text before or after JSON.
+
+Required JSON format:
+{
+  "question": "",
+  "options": [
+    "A. ...",
+    "B. ...",
+    "C. ...",
+    "D. ..."
+  ],
+  "answer": "A",
+  "explanation": ""
+}
+"""
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        content = response["message"]["content"].strip()
+
+        print("\n================ AI GENERATE RESPONSE ================\n")
+        print(content)
+        print("\n======================================================\n")
+
+        return content
+
+    except Exception as e:
+        print("OLLAMA GENERATE ERROR:", e)
+        return ""

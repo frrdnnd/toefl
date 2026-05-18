@@ -9,9 +9,11 @@ from app.core.database import SessionLocal
 from app.models.history import PracticeHistory
 
 from app.services.llm_service import ask_llm
+from app.services.llm_service import ask_llm_generate
 from app.services.rag_service import get_context
 
 import json
+
 
 router = APIRouter()
 
@@ -49,13 +51,134 @@ class EvaluationRequest(BaseModel):
 
 
 # =========================
+# FALLBACK QUESTION
+# =========================
+
+def get_fallback_question(category: str, difficulty: str):
+    normalized_category = category.lower().strip()
+
+    fallback_questions = {
+        "grammar": {
+            "question": "Choose the correct sentence.",
+            "options": [
+                "A. She go to school.",
+                "B. She goes to school.",
+                "C. She going to school.",
+                "D. She gone to school."
+            ],
+            "answer": "B",
+            "explanation": "Singular subject uses a verb with s/es."
+        },
+
+        "vocabulary": {
+            "question": "Choose the closest meaning of the word 'essential'.",
+            "options": [
+                "A. Unnecessary",
+                "B. Important",
+                "C. Difficult",
+                "D. Temporary"
+            ],
+            "answer": "B",
+            "explanation": "'Essential' means very important or necessary."
+        },
+
+        "reading": {
+            "question": (
+                "Read the sentence: 'Many students prefer online classes "
+                "because they offer flexibility.' What is the main reason "
+                "students prefer online classes?"
+            ),
+            "options": [
+                "A. They are more difficult.",
+                "B. They offer flexibility.",
+                "C. They require more books.",
+                "D. They are always free."
+            ],
+            "answer": "B",
+            "explanation": (
+                "The sentence states that students prefer online classes "
+                "because they offer flexibility."
+            )
+        },
+
+        "listening": {
+            "question": (
+                "A professor says: 'The assignment is due next Monday, "
+                "not this Friday.' When is the assignment due?"
+            ),
+            "options": [
+                "A. This Friday",
+                "B. Next Monday",
+                "C. Tomorrow",
+                "D. Next Friday"
+            ],
+            "answer": "B",
+            "explanation": (
+                "The professor clearly says the assignment is due next Monday."
+            )
+        },
+
+        "speaking": {
+            "question": (
+                "Which response best answers this TOEFL speaking prompt: "
+                "'Describe a place you like to study and explain why.'"
+            ),
+            "options": [
+                "A. I like studying in the library because it is quiet and helps me focus.",
+                "B. I went to the library yesterday.",
+                "C. Studying is sometimes difficult.",
+                "D. My school has many classrooms."
+            ],
+            "answer": "A",
+            "explanation": (
+                "Option A directly describes a study place and gives a reason."
+            )
+        }
+    }
+
+    selected_question = fallback_questions.get(
+        normalized_category,
+        fallback_questions["grammar"]
+    )
+
+    return {
+        **selected_question,
+        "difficulty": difficulty,
+        "category": category
+    }
+
+
+# =========================
+# CLEAN JSON RESPONSE
+# =========================
+
+def clean_ai_json_response(response: str):
+    cleaned = response.strip()
+
+    if cleaned.startswith("```json"):
+        cleaned = cleaned.replace("```json", "")
+        cleaned = cleaned.replace("```", "")
+        cleaned = cleaned.strip()
+
+    elif cleaned.startswith("```"):
+        cleaned = cleaned.replace("```", "")
+        cleaned = cleaned.strip()
+
+    start_index = cleaned.find("{")
+    end_index = cleaned.rfind("}")
+
+    if start_index != -1 and end_index != -1:
+        cleaned = cleaned[start_index:end_index + 1]
+
+    return json.loads(cleaned)
+
+
+# =========================
 # GENERATE QUESTION
 # =========================
 
 @router.post("/generate-question")
-def generate_question(
-    payload: QuestionRequest
-):
+def generate_question(payload: QuestionRequest):
 
     context = get_context(payload.category)
 
@@ -68,26 +191,30 @@ TOEFL MATERIAL:
 {context}
 
 TASK:
-Generate 1 TOEFL {payload.category} question.
+Generate exactly 1 TOEFL {payload.category} question.
 
 Difficulty:
 {payload.difficulty}
 
-RULES:
-- Generate high-quality TOEFL style question
-- Provide 4 options
-- Only one correct answer
-- Add short explanation
-- Keep grammar accurate
-- Make it suitable for TOEFL learners
+STRICT RULES:
+- The question MUST be about this category: {payload.category}
+- The difficulty MUST be: {payload.difficulty}
+- Generate exactly 4 answer options
+- Each option MUST start with A., B., C., or D.
+- The answer field MUST contain only one letter: A, B, C, or D
+- Add a short explanation
+- Return ONLY valid JSON
+- Do NOT include markdown
+- Do NOT include text outside JSON
 
-IMPORTANT:
-Return ONLY valid JSON.
-Do NOT include markdown.
-Do NOT include explanation outside JSON.
+CATEGORY GUIDE:
+- Grammar: ask about sentence structure, tense, subject-verb agreement, prepositions, clauses, or grammar correction.
+- Vocabulary: ask about meaning, synonym, antonym, word usage, or context vocabulary.
+- Reading: include a short passage, then ask about main idea, inference, detail, purpose, or reference.
+- Listening: create a short spoken conversation or lecture situation, then ask a listening comprehension question.
+- Speaking: create a TOEFL speaking prompt or choose the best spoken response.
 
-FORMAT:
-
+JSON FORMAT:
 {{
   "question": "...",
   "options": [
@@ -101,31 +228,32 @@ FORMAT:
 }}
 """
 
-    response = ask_llm(
-        question=prompt,
-        options="",
-        user_answer="",
-        correct_answer=""
-    )
-
     try:
+        response = ask_llm_generate(prompt)
 
-        # jika response dict AI tutor
-        if isinstance(response, dict):
-            raise Exception("Use fallback parser")
+        parsed = clean_ai_json_response(response)
 
-        cleaned = response.strip()
+        required_keys = [
+            "question",
+            "options",
+            "answer",
+            "explanation"
+        ]
 
-        if cleaned.startswith("```json"):
-            cleaned = cleaned.replace(
-                "```json",
-                ""
-            ).replace(
-                "```",
-                ""
-            ).strip()
+        for key in required_keys:
+            if key not in parsed:
+                raise ValueError(f"Missing key from AI response: {key}")
 
-        parsed = json.loads(cleaned)
+        if not isinstance(parsed["options"], list):
+            raise ValueError("Options must be a list")
+
+        if len(parsed["options"]) != 4:
+            raise ValueError("Options must contain exactly 4 choices")
+
+        parsed["answer"] = str(parsed["answer"]).strip().upper()[0]
+
+        if parsed["answer"] not in ["A", "B", "C", "D"]:
+            raise ValueError("Answer must be A, B, C, or D")
 
         parsed["difficulty"] = payload.difficulty
         parsed["category"] = payload.category
@@ -136,21 +264,10 @@ FORMAT:
 
         print("QUESTION GENERATION ERROR:", e)
 
-        return {
-            "question": "Choose the correct sentence.",
-            "options": [
-                "A. She go to school.",
-                "B. She goes to school.",
-                "C. She going to school.",
-                "D. She gone to school."
-            ],
-            "answer": "B",
-            "difficulty": payload.difficulty,
-            "category": payload.category,
-            "explanation": (
-                "Singular subject uses verb with s/es."
-            )
-        }
+        return get_fallback_question(
+            category=payload.category,
+            difficulty=payload.difficulty
+        )
 
 
 # =========================
@@ -163,56 +280,46 @@ def evaluate_answer(
     db: Session = Depends(get_db)
 ):
 
-    # =========================
-    # ASK AI TUTOR
-    # =========================
-    # =========================
-# GET FULL CORRECT OPTION
-# =========================
-
     correct_option = next(
-    (
-        opt for opt in payload.options
-        if opt.startswith(payload.correct_answer)
-    ),
-    payload.correct_answer
-)
+        (
+            opt for opt in payload.options
+            if opt.startswith(payload.correct_answer)
+        ),
+        payload.correct_answer
+    )
+
     parsed = ask_llm(
-    question=payload.question,
-
-    options=payload.options,
-
-    user_answer=payload.user_answer,
-
-correct_answer=correct_option)
-
-    # =========================
-    # AUTO DETECT CORRECTNESS
-    # =========================
+        question=payload.question,
+        options=payload.options,
+        user_answer=payload.user_answer,
+        correct_answer=correct_option
+    )
 
     is_correct = (
         payload.user_answer.strip().upper() ==
         payload.correct_answer.strip().upper()
     )
 
-    # =========================
-    # FALLBACK SAFETY
-    # =========================
-
     if not isinstance(parsed, dict):
 
         parsed = {
-            "correct_answer": payload.correct_answer,
+            "correct_answer": correct_option,
             "translation": "Translation unavailable.",
             "explanation": "AI explanation unavailable.",
             "why_wrong": "Could not analyze answer.",
-            "grammar_tip": "Review grammar fundamentals.",
-            "toefl_tip": "Practice more TOEFL questions."
+            "grammar_tip": "Review the related TOEFL skill.",
+            "toefl_tip": "Practice more TOEFL questions in this category."
         }
 
-    # =========================
-    # SAVE DATABASE
-    # =========================
+    parsed.setdefault("correct_answer", correct_option)
+    parsed.setdefault("translation", "Translation unavailable.")
+    parsed.setdefault("explanation", "AI explanation unavailable.")
+    parsed.setdefault("why_wrong", "Could not analyze answer.")
+    parsed.setdefault("grammar_tip", "Review the related TOEFL skill.")
+    parsed.setdefault(
+        "toefl_tip",
+        "Practice more TOEFL questions in this category."
+    )
 
     history = PracticeHistory(
         category=payload.category,
@@ -230,10 +337,6 @@ correct_answer=correct_option)
     db.add(history)
     db.commit()
     db.refresh(history)
-
-    # =========================
-    # RETURN RESPONSE
-    # =========================
 
     return {
         "is_correct": is_correct,
