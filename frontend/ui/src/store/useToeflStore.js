@@ -19,6 +19,8 @@ export const useToeflStore = defineStore(
 
     const weakness = ref(null)
 
+    const evaluationResult = ref(null)
+
     // =========================
     // GENERATE QUESTION
     // =========================
@@ -54,28 +56,38 @@ export const useToeflStore = defineStore(
     // EVALUATE ANSWER
     // =========================
 
-    const evaluateAnswer = async (
-      payload
-    ) => {
+    const evaluateAnswer = async (payload) => {
 
       loading.value = true
 
+      console.log('\n[Store] evaluateAnswer called with:', payload)
+
       try {
 
-        const result =
-          await questionService.evaluateAnswer(
-            payload
-          )
+        const result = await questionService.evaluateAnswer(payload)
+
+        console.log('[Store] Response from service:', result)
+        console.log('[Store] Response type:', typeof result)
+        console.log('[Store] Response keys:', result ? Object.keys(result) : 'N/A')
+
+        evaluationResult.value = result
+
+        console.log('[Store] evaluationResult.value set to:', evaluationResult.value)
 
         await fetchHistory()
 
         await fetchDashboard()
 
+        console.log('[Store] Returning result:', result)
         return result
 
       } catch (error) {
 
-        console.error(error)
+        console.error('[Store] Evaluation Error:', error)
+        console.error('[Store] Error message:', error.message)
+        console.error('[Store] Error stack:', error.stack)
+
+        return null
 
       } finally {
 
@@ -152,6 +164,8 @@ export const useToeflStore = defineStore(
       recommendation,
 
       weakness,
+
+      evaluationResult,
 
       generateQuestion,
 

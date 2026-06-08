@@ -14,17 +14,6 @@
       </div>
     </div>
 
-    <!-- Center: search -->
-    <div class="hidden md:flex flex-1 max-w-xs items-center gap-2 bg-slate-50 border border-blue-100 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-blue-200 focus-within:border-blue-300 transition-all">
-      <Search class="w-4 h-4 text-slate-400 flex-shrink-0" />
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="Search questions..."
-        class="flex-1 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
-      />
-    </div>
-
     <!-- Right: actions -->
     <div class="flex items-center gap-2">
       <!-- AI Status -->
@@ -48,18 +37,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Menu, Search, Bell } from 'lucide-vue-next'
+import { Menu, Bell } from 'lucide-vue-next'
 
 defineEmits(['toggle-sidebar'])
 
 const route = useRoute()
-const searchQuery = ref('')
 
 const pages = {
-  '/': { title: 'Dashboard', subtitle: 'Your learning overview' },
+  '/': { title: 'Practice', subtitle: 'AI-powered question generator' },
   '/practice': { title: 'Practice', subtitle: 'AI-powered question generator' },
+  '/Dashboard': { title: 'Dashboard', subtitle: 'Your learning overview' },
   '/history': { title: 'History', subtitle: 'Your past practice sessions' }
 }
 

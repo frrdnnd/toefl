@@ -9,6 +9,7 @@ import Settings from '@/pages/Settings.vue'
 const routes = [
   {
     path: '/',
+    alias: '/practice',
     name: 'Practice',
     component: Practice
   },

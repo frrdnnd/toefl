@@ -9,8 +9,21 @@ export default {
   },
 
   async evaluateAnswer(data) {
-    const response = await api.post('/evaluate-answer', data)
-    return response
+    console.log('\n[Service] evaluateAnswer called')
+    console.log('[Service] Payload:', data)
+    try {
+      console.log('[Service] Making POST request to /evaluate-answer')
+      const response = await api.post('/evaluate-answer', data)
+      console.log('[Service] Response received:', response)
+      console.log('[Service] Response type:', typeof response)
+      console.log('[Service] Response is array:', Array.isArray(response))
+      console.log('[Service] Response keys:', Object.keys(response))
+      return response
+    } catch (error) {
+      console.error('[Service] Evaluation error:', error.message)
+      console.error('[Service] Full error:', error)
+      throw error
+    }
   },
 
   async getHistory() {

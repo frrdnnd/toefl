@@ -137,9 +137,19 @@
             📘 Explanation
           </h3>
 
-          <p class="text-slate-700 leading-relaxed">
-            {{ evaluationResult.explanation }}
-          </p>
+          <div class="mb-4">
+            <p class="text-xs font-semibold text-slate-500 mb-1">English:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.explanation }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">Bahasa Indonesia:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.explanation_id }}
+            </p>
+          </div>
         </div>
 
         <!-- Why Wrong -->
@@ -151,9 +161,19 @@
             ❌ Why Your Answer Is Wrong
           </h3>
 
-          <p class="text-slate-700 leading-relaxed">
-            {{ evaluationResult.why_wrong }}
-          </p>
+          <div class="mb-4">
+            <p class="text-xs font-semibold text-slate-500 mb-1">English:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.why_wrong }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">Bahasa Indonesia:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.why_wrong_id }}
+            </p>
+          </div>
         </div>
 
         <!-- Grammar Tip -->
@@ -162,9 +182,19 @@
             💡 Grammar Tip
           </h3>
 
-          <p class="text-slate-700 leading-relaxed">
-            {{ evaluationResult.grammar_tip }}
-          </p>
+          <div class="mb-4">
+            <p class="text-xs font-semibold text-slate-500 mb-1">English:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.grammar_tip }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">Bahasa Indonesia:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.grammar_tip_id }}
+            </p>
+          </div>
         </div>
 
         <!-- TOEFL Tip -->
@@ -173,9 +203,19 @@
             🎯 TOEFL Strategy Tip
           </h3>
 
-          <p class="text-slate-700 leading-relaxed">
-            {{ evaluationResult.toefl_tip }}
-          </p>
+          <div class="mb-4">
+            <p class="text-xs font-semibold text-slate-500 mb-1">English:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.toefl_tip }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1">Bahasa Indonesia:</p>
+            <p class="text-slate-700 leading-relaxed">
+              {{ evaluationResult.toefl_tip_id }}
+            </p>
+          </div>
         </div>
 
       </div>
@@ -262,26 +302,46 @@ const generateQuestion = async () => {
 }
 
 const submitAnswer = async (answer) => {
-  if (!store.currentQuestion) return
+  if (!store.currentQuestion) {
+    console.error('❌ No current question')
+    return
+  }
 
+  console.log('\n========== SUBMIT ANSWER START ==========')
   evaluationResult.value = null
 
-  const result = await store.evaluateAnswer({
-  question: store.currentQuestion.question,
-
-  options: store.currentQuestion.options,
-
-  user_answer: answer,
-
-  correct_answer: store.currentQuestion.answer,
-
-  category: selectedCategory.value,
-
-  difficulty: selectedDifficulty.value
-})
-
-  if (result) {
-    evaluationResult.value = result
+  const payload = {
+    question: store.currentQuestion.question,
+    options: store.currentQuestion.options,
+    user_answer: answer,
+    correct_answer: store.currentQuestion.answer,
+    category: selectedCategory.value,
+    difficulty: selectedDifficulty.value
   }
+
+  console.log('📤 Payload:', JSON.stringify(payload, null, 2))
+
+  try {
+    console.log('⏳ Calling store.evaluateAnswer...')
+    const result = await store.evaluateAnswer(payload)
+
+    console.log('📥 Result from store:', result)
+    console.log('Result type:', typeof result)
+    console.log('Result is null:', result === null)
+    console.log('Result is undefined:', result === undefined)
+    console.log('Result keys:', result ? Object.keys(result) : 'N/A')
+
+    if (result && typeof result === 'object') {
+      evaluationResult.value = result
+      console.log('✅ evaluationResult.value SET:', evaluationResult.value)
+    } else {
+      console.warn('⚠️  Result is not an object:', result)
+      evaluationResult.value = null
+    }
+  } catch (error) {
+    console.error('❌ Submit Answer Error:', error.message)
+    console.error('Full error:', error)
+  }
+  console.log('========== SUBMIT ANSWER END ==========' )
 }
 </script>

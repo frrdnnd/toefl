@@ -1,40 +1,28 @@
+import json
+
 from fastapi import APIRouter
 from fastapi import Depends
-
 from pydantic import BaseModel
-
 from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.models.history import PracticeHistory
-
 from app.services.llm_service import ask_llm
 from app.services.llm_service import ask_llm_generate
 from app.services.rag_service import get_context
 
-import json
-
 
 router = APIRouter()
 
-
-# =========================
-# DATABASE
-# =========================
 
 def get_db():
     db = SessionLocal()
 
     try:
         yield db
-
     finally:
         db.close()
 
-
-# =========================
-# REQUEST MODELS
-# =========================
 
 class QuestionRequest(BaseModel):
     category: str
@@ -49,10 +37,6 @@ class EvaluationRequest(BaseModel):
     category: str = "Grammar"
     difficulty: str = "Intermediate"
 
-
-# =========================
-# FALLBACK QUESTION
-# =========================
 
 def get_fallback_question(category: str, difficulty: str):
     normalized_category = category.lower().strip()
@@ -69,7 +53,6 @@ def get_fallback_question(category: str, difficulty: str):
             "answer": "B",
             "explanation": "Singular subject uses a verb with s/es."
         },
-
         "vocabulary": {
             "question": "Choose the closest meaning of the word 'essential'.",
             "options": [
@@ -81,7 +64,6 @@ def get_fallback_question(category: str, difficulty: str):
             "answer": "B",
             "explanation": "'Essential' means very important or necessary."
         },
-
         "reading": {
             "question": (
                 "Read the sentence: 'Many students prefer online classes "
@@ -100,7 +82,6 @@ def get_fallback_question(category: str, difficulty: str):
                 "because they offer flexibility."
             )
         },
-
         "listening": {
             "question": (
                 "A professor says: 'The assignment is due next Monday, "
@@ -117,7 +98,6 @@ def get_fallback_question(category: str, difficulty: str):
                 "The professor clearly says the assignment is due next Monday."
             )
         },
-
         "speaking": {
             "question": (
                 "Which response best answers this TOEFL speaking prompt: "
@@ -148,10 +128,6 @@ def get_fallback_question(category: str, difficulty: str):
     }
 
 
-# =========================
-# CLEAN JSON RESPONSE
-# =========================
-
 def clean_ai_json_response(response: str):
     cleaned = response.strip()
 
@@ -159,7 +135,6 @@ def clean_ai_json_response(response: str):
         cleaned = cleaned.replace("```json", "")
         cleaned = cleaned.replace("```", "")
         cleaned = cleaned.strip()
-
     elif cleaned.startswith("```"):
         cleaned = cleaned.replace("```", "")
         cleaned = cleaned.strip()
@@ -170,17 +145,22 @@ def clean_ai_json_response(response: str):
     if start_index != -1 and end_index != -1:
         cleaned = cleaned[start_index:end_index + 1]
 
+    cleaned = "".join(
+        ch
+        for ch in cleaned
+        if ch in "\n\r\t" or ord(ch) >= 0x20
+    )
+
     return json.loads(cleaned)
 
 
-# =========================
-# GENERATE QUESTION
-# =========================
-
 @router.post("/generate-question")
 def generate_question(payload: QuestionRequest):
-
-    context = get_context(payload.category)
+    try:
+        context = get_context(payload.category, payload.category)
+    except Exception as e:
+        print("RAG CONTEXT ERROR:", e)
+        context = ""
 
     prompt = f"""
 You are a professional TOEFL tutor AI.
@@ -230,7 +210,6 @@ JSON FORMAT:
 
     try:
         response = ask_llm_generate(prompt)
-
         parsed = clean_ai_json_response(response)
 
         required_keys = [
@@ -261,7 +240,6 @@ JSON FORMAT:
         return parsed
 
     except Exception as e:
-
         print("QUESTION GENERATION ERROR:", e)
 
         return get_fallback_question(
@@ -270,16 +248,11 @@ JSON FORMAT:
         )
 
 
-# =========================
-# EVALUATE ANSWER
-# =========================
-
 @router.post("/evaluate-answer")
 def evaluate_answer(
     payload: EvaluationRequest,
     db: Session = Depends(get_db)
 ):
-
     correct_option = next(
         (
             opt for opt in payload.options
@@ -296,30 +269,34 @@ def evaluate_answer(
     )
 
     is_correct = (
-        payload.user_answer.strip().upper() ==
-        payload.correct_answer.strip().upper()
+        payload.user_answer.strip().upper()
+        == payload.correct_answer.strip().upper()
     )
 
     if not isinstance(parsed, dict):
-
         parsed = {
             "correct_answer": correct_option,
             "translation": "Translation unavailable.",
             "explanation": "AI explanation unavailable.",
+            "explanation_id": "Penjelasan AI tidak tersedia.",
             "why_wrong": "Could not analyze answer.",
-            "grammar_tip": "Review the related TOEFL skill.",
-            "toefl_tip": "Practice more TOEFL questions in this category."
+            "why_wrong_id": "Tidak dapat menganalisis jawaban.",
+            "grammar_tip": "Review grammar fundamentals.",
+            "grammar_tip_id": "Tinjau dasar-dasar tata bahasa.",
+            "toefl_tip": "Practice more TOEFL questions.",
+            "toefl_tip_id": "Praktik lebih banyak soal TOEFL."
         }
 
     parsed.setdefault("correct_answer", correct_option)
     parsed.setdefault("translation", "Translation unavailable.")
     parsed.setdefault("explanation", "AI explanation unavailable.")
+    parsed.setdefault("explanation_id", "Penjelasan AI tidak tersedia.")
     parsed.setdefault("why_wrong", "Could not analyze answer.")
-    parsed.setdefault("grammar_tip", "Review the related TOEFL skill.")
-    parsed.setdefault(
-        "toefl_tip",
-        "Practice more TOEFL questions in this category."
-    )
+    parsed.setdefault("why_wrong_id", "Tidak dapat menganalisis jawaban.")
+    parsed.setdefault("grammar_tip", "Review grammar fundamentals.")
+    parsed.setdefault("grammar_tip_id", "Tinjau dasar-dasar tata bahasa.")
+    parsed.setdefault("toefl_tip", "Practice more TOEFL questions.")
+    parsed.setdefault("toefl_tip_id", "Praktik lebih banyak soal TOEFL.")
 
     history = PracticeHistory(
         category=payload.category,
@@ -328,9 +305,9 @@ def evaluate_answer(
         user_answer=payload.user_answer,
         correct_answer=correct_option,
         is_correct=is_correct,
-        analysis=parsed["explanation"],
-        grammar_tip=parsed["grammar_tip"],
-        improvement=parsed["toefl_tip"],
+        analysis=parsed.get("explanation", ""),
+        grammar_tip=parsed.get("grammar_tip", ""),
+        improvement=parsed.get("toefl_tip", ""),
         weakness_detected=payload.category
     )
 
@@ -340,10 +317,14 @@ def evaluate_answer(
 
     return {
         "is_correct": is_correct,
-        "correct_answer": parsed["correct_answer"],
-        "translation": parsed["translation"],
-        "explanation": parsed["explanation"],
-        "why_wrong": parsed["why_wrong"],
-        "grammar_tip": parsed["grammar_tip"],
-        "toefl_tip": parsed["toefl_tip"]
+        "correct_answer": parsed.get("correct_answer", ""),
+        "translation": parsed.get("translation", ""),
+        "explanation": parsed.get("explanation", ""),
+        "explanation_id": parsed.get("explanation_id", ""),
+        "why_wrong": parsed.get("why_wrong", ""),
+        "why_wrong_id": parsed.get("why_wrong_id", ""),
+        "grammar_tip": parsed.get("grammar_tip", ""),
+        "grammar_tip_id": parsed.get("grammar_tip_id", ""),
+        "toefl_tip": parsed.get("toefl_tip", ""),
+        "toefl_tip_id": parsed.get("toefl_tip_id", "")
     }

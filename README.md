@@ -1,92 +1,375 @@
 # SMARTTOEFL AI
 
-SMARTTOEFL AI is a local TOEFL practice application with a FastAPI backend, a Vue 3 frontend, SQLite history tracking, RAG-based TOEFL material retrieval, and local LLM responses through Ollama.
+SMARTTOEFL AI adalah aplikasi latihan TOEFL berbasis web yang berjalan secara lokal. Aplikasi ini memakai FastAPI sebagai backend, Vue 3 sebagai frontend, SQLite untuk menyimpan riwayat latihan, Chroma vector database untuk RAG, dan Ollama sebagai LLM lokal.
 
-## Features
+Tujuan utama project ini adalah membantu user membuat soal TOEFL secara adaptif, menjawab soal, mendapatkan evaluasi bilingual Inggris/Indonesia, serta melihat riwayat dan analitik latihan.
 
-- Generate TOEFL-style questions by category and difficulty.
-- Evaluate answers with bilingual English/Indonesian feedback.
-- Store practice history in SQLite.
-- Show analytics, weakness analysis, and recommendations.
-- Use local TOEFL material from `backend/app/dataset` with Chroma vector search.
-- Run with a local Ollama model, so no external LLM API key is required.
+## Fitur Utama
 
-## Project Structure
+- Generate soal TOEFL berdasarkan kategori dan tingkat kesulitan.
+- Kategori utama yang tersedia di UI: Grammar, Vocabulary, dan Reading.
+- Evaluasi jawaban user dengan feedback bilingual.
+- Menampilkan correct answer, explanation, translation, why wrong, grammar tip, dan TOEFL strategy tip.
+- Menyimpan riwayat latihan ke SQLite.
+- Menampilkan analytics, weakness analysis, dan recommendation.
+- Menggunakan dataset lokal dari `backend/app/dataset`.
+- Menggunakan RAG dengan Chroma vectorstore.
+- Menggunakan Ollama lokal, jadi tidak membutuhkan API key LLM eksternal.
+
+## Teknologi
+
+Backend:
+
+- FastAPI
+- SQLAlchemy
+- SQLite
+- LangChain
+- ChromaDB
+- HuggingFace sentence-transformers embedding
+- Ollama
+- pypdf
+
+Frontend:
+
+- Vue 3
+- Vite
+- Pinia
+- Vue Router
+- Axios
+- Tailwind CSS
+- Chart.js
+- Lucide icons
+- Lottie animation
+
+## Struktur Project
 
 ```text
 .
 +-- backend/
 |   +-- app/
-|   |   +-- api/routes/          # FastAPI endpoints
-|   |   +-- core/database.py     # SQLite configuration
-|   |   +-- dataset/             # TOEFL source material
-|   |   +-- models/              # SQLAlchemy models
-|   |   +-- services/            # LLM and RAG services
-|   +-- build_rag.py             # Builds the Chroma vectorstore
-|   +-- requirements.txt         # Python dependencies
+|   |   +-- api/routes/
+|   |   |   +-- question.py          # Generate soal dan evaluasi jawaban
+|   |   |   +-- history.py           # Riwayat latihan
+|   |   |   +-- analytics.py         # Statistik latihan
+|   |   |   +-- recommendation.py    # Rekomendasi belajar
+|   |   |   +-- weakness.py          # Analisis kelemahan
+|   |   +-- core/
+|   |   |   +-- database.py          # Konfigurasi SQLite
+|   |   +-- dataset/                 # Dataset TOEFL dan vocabulary
+|   |   +-- models/
+|   |   |   +-- history.py           # Model tabel practice_history
+|   |   +-- services/
+|   |   |   +-- rag_service.py       # Load dataset, build vectorstore, retrieve context
+|   |   |   +-- llm_service.py       # Prompt dan komunikasi ke Ollama
+|   |   +-- main.py                  # Entry point FastAPI
+|   +-- build_rag.py                 # Script build ulang Chroma vectorstore
+|   +-- transcribe_audio.py          # Script transkripsi audio listening
+|   +-- requirements.txt
 +-- frontend/
     +-- ui/
-        +-- src/                 # Vue app source
-        +-- package.json         # Node dependencies and scripts
-        +-- .env.example         # Frontend environment template
+        +-- src/
+        |   +-- pages/
+        |   |   +-- Practice.vue     # Halaman utama generate dan submit jawaban
+        |   |   +-- Dashboard.vue    # Dashboard progress
+        |   |   +-- History.vue      # Riwayat latihan
+        |   |   +-- Analytics.vue    # Analitik tambahan
+        |   +-- components/
+        |   |   +-- QuestionCard.vue # Tampilan soal dan opsi jawaban
+        |   +-- services/
+        |   |   +-- api.js           # Axios config
+        |   |   +-- questionService.js
+        |   +-- store/
+        |   |   +-- useToeflStore.js # State management Pinia
+        |   +-- router/
+        |   |   +-- index.js
+        +-- package.json
 ```
 
-## Requirements
+## Dataset
 
-- Python 3.10 or newer.
-- Node.js 20 or newer.
-- Ollama installed locally.
-- Internet connection for first-time Python package install and first-time model/embedding downloads.
-
-The backend currently uses this Ollama model:
+Dataset utama berada di:
 
 ```text
-qwen2.5:1.5b
+backend/app/dataset
 ```
 
-## Backend Setup
+Struktur dataset:
 
-Open a terminal in the backend folder:
+```text
+backend/app/dataset/
++-- grammar/
++-- reading/
++-- vocabulary/
++-- overview/
++-- listening/
+|   +-- audio/
+|   +-- transcript/
++-- speaking/
+    +-- prompts/
+    +-- rubric/
+```
+
+Dataset yang dipakai langsung oleh RAG hanya file:
+
+```text
+.txt
+.pdf
+```
+
+File audio `.mp3` tidak langsung dibaca RAG. Audio perlu ditranskrip dulu menjadi `.txt` lewat `backend/transcribe_audio.py`.
+
+### Sumber Dataset
+
+Sumber utama project ini adalah official TOEFL/ETS resources, seperti:
+
+- TOEFL iBT lesson plans.
+- TOEFL iBT test overview.
+- TOEFL teacher FAQ.
+- TOEFL practice test.
+- TOEFL listening audio resources.
+
+Untuk kategori Vocabulary, ETS tidak menyediakan satu wordlist resmi TOEFL yang berdiri sendiri. Karena itu dataset vocabulary diperkuat dengan academic vocabulary resources, seperti Academic Vocabulary List/Core Academic Words. File vocabulary yang sudah masuk:
+
+```text
+backend/app/dataset/vocabulary/acadCore.txt
+backend/app/dataset/vocabulary/general-core.pdf
+```
+
+File `acadCore.xlsx` tetap disimpan sebagai sumber asli, tetapi RAG memakai versi `.txt` karena loader saat ini hanya mendukung `.txt` dan `.pdf`.
+
+## RAG dan Vectorstore
+
+RAG diproses oleh:
+
+```text
+backend/app/services/rag_service.py
+```
+
+Alurnya:
+
+1. `build_vectorstore()` membaca semua file `.txt` dan `.pdf` dari `app/dataset`.
+2. PDF dibaca dengan `pypdf`.
+3. TXT dibaca dengan `TextLoader`.
+4. Dokumen dipotong menjadi chunk.
+5. Embedding dibuat dengan model `sentence-transformers/all-MiniLM-L6-v2`.
+6. Chroma menyimpan hasil index ke `app/vectorstore`.
+
+Build ulang vectorstore:
+
+```powershell
+cd backend
+venv\Scripts\activate
+Remove-Item -Recurse -Force app\vectorstore
+python build_rag.py
+```
+
+Vectorstore perlu di-build ulang jika:
+
+- Dataset baru ditambahkan.
+- Dataset lama dihapus.
+- File dataset diubah.
+- Folder `app/vectorstore` terhapus atau stale.
+
+## Alur Generate Question
+
+Alur saat user klik tombol Generate Question:
+
+```text
+Practice.vue
+-> useToeflStore.js
+-> questionService.js
+-> api.js
+-> POST /generate-question
+-> backend/app/api/routes/question.py
+-> get_context() dari rag_service.py
+-> ask_llm_generate() dari llm_service.py
+-> Ollama qwen2.5:1.5b
+-> response JSON soal
+-> currentQuestion di Pinia
+-> QuestionCard.vue menampilkan soal
+```
+
+Detail proses backend:
+
+1. Frontend mengirim `category` dan `difficulty`.
+2. Backend mengambil konteks dari Chroma vectorstore.
+3. Backend membuat prompt berisi TOEFL material dari RAG.
+4. Ollama generate soal dalam format JSON.
+5. Backend membersihkan dan validasi JSON.
+6. Jika LLM gagal, backend memakai fallback question.
+7. Response dikirim kembali ke frontend.
+
+Contoh response:
+
+```json
+{
+  "question": "Choose the closest meaning of the word research.",
+  "options": [
+    "A. Guess",
+    "B. Study",
+    "C. Ignore",
+    "D. Sleep"
+  ],
+  "answer": "B",
+  "explanation": "Research means careful study.",
+  "difficulty": "Easy",
+  "category": "Vocabulary"
+}
+```
+
+## Alur Submit dan Evaluasi Jawaban
+
+Alur saat user memilih jawaban dan klik Submit Answer:
+
+```text
+QuestionCard.vue
+-> emit submit-answer
+-> Practice.vue membuat payload evaluasi
+-> useToeflStore.js
+-> questionService.js
+-> POST /evaluate-answer
+-> question.py
+-> ask_llm() di llm_service.py
+-> simpan PracticeHistory ke SQLite
+-> response evaluasi
+-> Practice.vue menampilkan feedback
+-> fetchHistory()
+-> fetchDashboard()
+```
+
+Backend menentukan benar atau salah secara deterministik:
+
+```text
+user_answer == correct_answer
+```
+
+LLM dipakai untuk membuat penjelasan, bukan untuk menentukan benar/salah.
+
+Output evaluasi mencakup:
+
+- `is_correct`
+- `correct_answer`
+- `translation`
+- `explanation`
+- `explanation_id`
+- `why_wrong`
+- `why_wrong_id`
+- `grammar_tip`
+- `grammar_tip_id`
+- `toefl_tip`
+- `toefl_tip_id`
+
+## Database
+
+Database memakai SQLite:
+
+```text
+backend/smarttoefl.db
+```
+
+Konfigurasi database:
+
+```text
+backend/app/core/database.py
+```
+
+Model history:
+
+```text
+backend/app/models/history.py
+```
+
+Tabel utama:
+
+```text
+practice_history
+```
+
+Data yang disimpan:
+
+- Category
+- Difficulty
+- Question
+- User answer
+- Correct answer
+- Is correct
+- Analysis
+- Grammar tip
+- Improvement
+- Weakness detected
+- Created at
+
+## Endpoint Backend
+
+```text
+GET    /
+POST   /generate-question
+POST   /evaluate-answer
+GET    /history
+DELETE /history
+GET    /analytics
+GET    /recommendation
+GET    /weakness-analysis
+```
+
+Keterangan:
+
+- `GET /` untuk health check backend.
+- `POST /generate-question` untuk membuat soal baru.
+- `POST /evaluate-answer` untuk mengevaluasi jawaban dan menyimpan history.
+- `GET /history` untuk mengambil riwayat latihan.
+- `DELETE /history` untuk menghapus riwayat latihan.
+- `GET /analytics` untuk statistik latihan.
+- `GET /recommendation` untuk rekomendasi belajar.
+- `GET /weakness-analysis` untuk ringkasan kelemahan.
+
+## Cara Menjalankan Backend
+
+Masuk ke folder backend:
 
 ```powershell
 cd backend
 ```
 
-Create and activate a virtual environment:
+Buat dan aktifkan virtual environment:
 
 ```powershell
 python -m venv venv
 venv\Scripts\activate
 ```
 
-Install dependencies:
+Install dependency:
 
 ```powershell
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Install and prepare the Ollama model:
+Install model Ollama:
 
 ```powershell
 ollama pull qwen2.5:1.5b
 ```
 
-Make sure the Ollama app/service is running before using AI endpoints.
+Pastikan Ollama berjalan:
 
-Build the RAG vectorstore:
+```powershell
+ollama list
+```
+
+Build RAG vectorstore:
 
 ```powershell
 python build_rag.py
 ```
 
-Run the API:
+Jalankan backend:
 
 ```powershell
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Check the backend:
+Cek backend:
 
 ```text
 http://127.0.0.1:8000/
@@ -98,147 +381,226 @@ Expected response:
 {"message":"SMARTTOEFL AI Backend Running"}
 ```
 
-API docs are available at:
+API docs:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-## Frontend Setup
+## Cara Menjalankan Frontend
 
-Open a second terminal in the frontend app folder:
+Masuk ke folder frontend:
 
 ```powershell
 cd frontend\ui
 ```
 
-Install dependencies:
+Install dependency:
 
 ```powershell
 npm install
 ```
 
-Create the frontend env file:
-
-```powershell
-copy .env.example .env
-```
-
-The default API URL is:
-
-```env
-VITE_API_URL=http://127.0.0.1:8000
-```
-
-Run the frontend:
+Jalankan development server:
 
 ```powershell
 npm run dev
 ```
 
-Open the Vite URL shown in the terminal, usually:
+Buka URL Vite, biasanya:
 
 ```text
 http://127.0.0.1:5173/
 ```
 
-## Common Workflow
-
-1. Start Ollama.
-2. Start the backend with `python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`.
-3. Start the frontend with `npm run dev`.
-4. Open the frontend in your browser.
-
-## Backend Endpoints
-
-- `GET /` - health check.
-- `POST /generate-question` - generate a TOEFL question.
-- `POST /evaluate-answer` - evaluate a submitted answer and save history.
-- `GET /analytics` - practice statistics.
-- `GET /history` - practice history.
-- `DELETE /history` - clear practice history.
-- `GET /recommendation` - study recommendation.
-- `GET /weakness-analysis` - weakness score summary.
-
-## Generated Files
-
-These files/folders are generated locally and are intentionally ignored by Git:
-
-- `backend/venv/`
-- `backend/smarttoefl.db`
-- `backend/app/vectorstore/`
-- `frontend/ui/node_modules/`
-- `.env` files
-
-If the vectorstore is missing, rerun:
-
-```powershell
-cd backend
-venv\Scripts\activate
-python build_rag.py
-```
-
-If the database is missing, it will be created automatically when the backend starts.
-
-## Troubleshooting
-
-### `ModuleNotFoundError: No module named 'fastapi'`
-
-You are missing backend dependencies or using the wrong Python environment.
-
-```powershell
-cd backend
-venv\Scripts\activate
-python -m pip install -r requirements.txt
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### `ModuleNotFoundError: No module named 'langchain_core.schema'`
-
-Use the current import:
-
-```python
-from langchain_core.documents import Document
-```
-
-### Ollama errors
-
-Make sure Ollama is installed, running, and the model exists locally:
-
-```powershell
-ollama list
-ollama pull qwen2.5:1.5b
-```
-
-### Frontend cannot connect to backend
-
-Check that the backend is running on port `8000` and that `frontend/ui/.env` contains:
+Jika menggunakan file `.env`, pastikan:
 
 ```env
 VITE_API_URL=http://127.0.0.1:8000
 ```
 
-Restart `npm run dev` after changing `.env`.
+## Workflow Penggunaan
 
-## Useful Commands
+1. Jalankan Ollama.
+2. Jalankan backend FastAPI.
+3. Jalankan frontend Vue.
+4. Buka halaman web.
+5. Pilih kategori: Grammar, Vocabulary, atau Reading.
+6. Pilih difficulty: Easy, Intermediate, atau Advanced.
+7. Klik Generate Question.
+8. Pilih jawaban.
+9. Klik Submit Answer.
+10. Lihat hasil evaluasi dan tips.
+11. Buka Dashboard/History untuk melihat progress.
 
-Build frontend for production:
+## Catatan Kategori
+
+Status kategori saat ini:
+
+```text
+Grammar    = aktif, dataset tersedia
+Vocabulary = aktif, dataset tersedia
+Reading    = aktif, dataset tersedia
+Listening  = dataset audio ada, belum aktif di UI utama
+Speaking   = dataset prompt/rubric ada, belum aktif di UI utama
+```
+
+Listening belum aktif karena audio `.mp3` harus ditranskrip dulu ke `.txt` agar bisa masuk RAG.
+
+Alur listening jika ingin diaktifkan:
+
+```text
+MP3 audio
+-> transcribe_audio.py
+-> transcript .txt
+-> build_rag.py
+-> Chroma vectorstore
+-> kategori Listening ditambahkan di UI
+```
+
+## Testing dan Validasi
+
+Compile backend:
+
+```powershell
+cd backend
+venv\Scripts\activate
+python -m compileall app
+```
+
+Build frontend:
 
 ```powershell
 cd frontend\ui
 npm run build
 ```
 
-Preview production build:
+Smoke test backend:
 
 ```powershell
-npm run preview
+Invoke-RestMethod http://127.0.0.1:8000/
 ```
 
-Rebuild backend vectorstore:
+Test generate question:
+
+```powershell
+$body = @{ category='Vocabulary'; difficulty='Easy' } | ConvertTo-Json
+Invoke-RestMethod `
+  -Uri http://127.0.0.1:8000/generate-question `
+  -Method Post `
+  -Body $body `
+  -ContentType 'application/json' `
+  -TimeoutSec 180
+```
+
+## Troubleshooting
+
+### Backend tidak bisa jalan karena port 8000 dipakai
+
+Error:
+
+```text
+address 127.0.0.1:8000 already in use
+```
+
+Artinya backend sudah berjalan di port tersebut. Tutup proses lama atau gunakan port lain.
+
+### Generate Question terasa lama atau mental
+
+Penyebab umum:
+
+- Ollama belum berjalan.
+- Model `qwen2.5:1.5b` belum di-pull.
+- Backend dijalankan lebih dari satu kali di port yang sama.
+- LLM lokal sedang cold start atau sibuk.
+- Vectorstore belum di-build.
+
+Cek Ollama:
+
+```powershell
+ollama list
+ollama pull qwen2.5:1.5b
+```
+
+Cek backend:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/
+```
+
+### Vectorstore kosong atau dataset tidak terbaca
+
+Rebuild vectorstore:
 
 ```powershell
 cd backend
 venv\Scripts\activate
+Remove-Item -Recurse -Force app\vectorstore
 python build_rag.py
 ```
+
+### File Excel tidak masuk RAG
+
+RAG saat ini hanya membaca `.txt` dan `.pdf`. Jika dataset berbentuk `.xlsx`, ubah atau ekspor dulu ke `.txt`.
+
+Contoh:
+
+```text
+acadCore.xlsx -> acadCore.txt
+```
+
+### Frontend tidak connect ke backend
+
+Pastikan backend berjalan di:
+
+```text
+http://127.0.0.1:8000
+```
+
+Pastikan `.env` frontend:
+
+```env
+VITE_API_URL=http://127.0.0.1:8000
+```
+
+Restart frontend setelah mengubah `.env`.
+
+## File Generated Lokal
+
+File/folder berikut dibuat lokal dan tidak wajib masuk repository:
+
+```text
+backend/venv/
+backend/smarttoefl.db
+backend/app/vectorstore/
+frontend/ui/node_modules/
+frontend/ui/dist/
+.env
+*.log
+__pycache__/
+```
+
+## Ringkasan Alur Sistem
+
+```text
+User
+-> Frontend Vue
+-> Pinia Store
+-> Axios Service
+-> FastAPI Backend
+-> RAG Context dari Chroma
+-> Ollama LLM
+-> JSON Response
+-> UI menampilkan soal/evaluasi
+-> SQLite menyimpan history
+-> Dashboard dan History diperbarui
+```
+
+## Status Terakhir
+
+- Backend compile: OK.
+- Frontend build: OK.
+- Vectorstore sudah di-rebuild.
+- Dataset vocabulary sudah tersedia.
+- Kategori Grammar, Vocabulary, dan Reading siap dicoba.
+- Listening dan Speaking masih bisa dikembangkan sebagai fitur lanjutan.
