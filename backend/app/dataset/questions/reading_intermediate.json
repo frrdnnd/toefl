@@ -1,0 +1,201 @@
+[
+  {
+    "id": "reading_int_001",
+    "section": "reading",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "the printing press",
+    "passage": "Before the middle of the fifteenth century, books in Europe were copied by hand. This work was slow and expensive, and a single book could take a scribe many months to complete. As a result, books were rare, and only wealthy people, religious institutions, and universities could own them. This situation changed dramatically when Johannes Gutenberg introduced a printing press that used movable metal type around 1440. With this machine, a printer could produce hundreds of identical pages in the time it once took to copy a single one.\n\nThe effects of the printing press were enormous. Books became cheaper and far more common, and literacy began to spread beyond the small group of educated elites. Ideas could now travel quickly across cities and countries. Scholars in different regions were able to read the same texts and build on one another's work. Many historians argue that the printing press helped make possible later movements such as the Reformation and the Scientific Revolution, because these movements depended on the rapid sharing of new and sometimes controversial ideas.",
+    "questions": [
+      {
+        "id": "reading_int_001_q1",
+        "type": "main_idea",
+        "question": "What is the main idea of the passage?",
+        "options": {
+          "A": "Gutenberg was the richest man in Europe",
+          "B": "The printing press made books cheaper and helped ideas spread widely",
+          "C": "Books copied by hand were more beautiful than printed books",
+          "D": "Universities were the only places that owned books"
+        },
+        "answer": "B",
+        "explanation": "The passage focuses on how the printing press lowered the cost of books and allowed ideas and literacy to spread. This is the main idea."
+      },
+      {
+        "id": "reading_int_001_q2",
+        "type": "detail",
+        "question": "According to the passage, why were books rare before the printing press?",
+        "options": {
+          "A": "Few people wanted to read them",
+          "B": "There was not enough paper in Europe",
+          "C": "Copying them by hand was slow and expensive",
+          "D": "Governments did not allow people to own books"
+        },
+        "answer": "C",
+        "explanation": "The passage states that copying books by hand 'was slow and expensive', which made books rare."
+      },
+      {
+        "id": "reading_int_001_q3",
+        "type": "vocabulary_in_context",
+        "question": "The word 'dramatically' in the passage is closest in meaning to",
+        "options": {
+          "A": "slowly",
+          "B": "greatly",
+          "C": "secretly",
+          "D": "rarely"
+        },
+        "answer": "B",
+        "explanation": "'This situation changed dramatically' means the situation changed greatly or to a large degree. 'Greatly' is the closest meaning."
+      },
+      {
+        "id": "reading_int_001_q4",
+        "type": "inference",
+        "question": "What can be inferred about the spread of new ideas after the printing press?",
+        "options": {
+          "A": "It became slower than before",
+          "B": "It was limited to religious texts only",
+          "C": "It was made easier by cheaper, more available books",
+          "D": "It stopped completely during the Reformation"
+        },
+        "answer": "C",
+        "explanation": "Since books became cheaper and more common and 'ideas could now travel quickly', it can be inferred that the spread of ideas was made easier by more available books."
+      },
+      {
+        "id": "reading_int_001_q5",
+        "type": "reference",
+        "question": "The phrase 'this machine' in the passage refers to",
+        "options": {
+          "A": "the scribe's desk",
+          "B": "the printing press",
+          "C": "the university",
+          "D": "the religious institution"
+        },
+        "answer": "B",
+        "explanation": "'With this machine, a printer could produce hundreds of identical pages' refers to the printing press that Gutenberg introduced."
+      }
+    ]
+  },
+  {
+    "id": "reading_int_002",
+    "section": "reading",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "coral reefs",
+    "passage": "Coral reefs are among the most diverse ecosystems on Earth. Although they cover less than one percent of the ocean floor, they provide a home for about a quarter of all marine species. A coral reef is built by tiny animals called coral polyps, which produce a hard outer skeleton of calcium carbonate. Over thousands of years, the skeletons of countless polyps accumulate to form the large structures that we recognize as reefs.\n\nCoral polyps have an unusual relationship with tiny algae that live inside their tissues. The algae use sunlight to make food and share some of it with the coral, while the coral gives the algae shelter and important nutrients. This partnership benefits both organisms. However, it is also fragile. When ocean water becomes too warm, the coral expels the algae, and the reef loses its main source of food and its bright color. This event, known as coral bleaching, can cause large areas of reef to die. Because rising ocean temperatures are now more frequent, scientists warn that many reefs around the world are in serious danger.",
+    "questions": [
+      {
+        "id": "reading_int_002_q1",
+        "type": "main_idea",
+        "question": "What is the passage mainly about?",
+        "options": {
+          "A": "How tourists can visit coral reefs safely",
+          "B": "How coral reefs form and why they are at risk",
+          "C": "Why algae are dangerous to the ocean",
+          "D": "How calcium carbonate is used by humans"
+        },
+        "answer": "B",
+        "explanation": "The passage explains how reefs are built by polyps and why warming oceans threaten them through bleaching. This is the main idea."
+      },
+      {
+        "id": "reading_int_002_q2",
+        "type": "detail",
+        "question": "According to the passage, what do the algae provide for the coral?",
+        "options": {
+          "A": "Shelter",
+          "B": "A hard skeleton",
+          "C": "Food made from sunlight",
+          "D": "Protection from tourists"
+        },
+        "answer": "C",
+        "explanation": "The passage states that 'the algae use sunlight to make food and share some of it with the coral'."
+      },
+      {
+        "id": "reading_int_002_q3",
+        "type": "vocabulary_in_context",
+        "question": "The word 'fragile' in the passage is closest in meaning to",
+        "options": {
+          "A": "strong",
+          "B": "easily damaged",
+          "C": "colorful",
+          "D": "permanent"
+        },
+        "answer": "B",
+        "explanation": "The partnership is called 'fragile' because warm water can easily break it. 'Easily damaged' is the closest meaning."
+      },
+      {
+        "id": "reading_int_002_q4",
+        "type": "inference",
+        "question": "What can be inferred about coral bleaching from the passage?",
+        "options": {
+          "A": "It makes reefs grow faster",
+          "B": "It is caused mainly by tourists",
+          "C": "It is likely to increase as ocean temperatures rise",
+          "D": "It has no effect on marine species"
+        },
+        "answer": "C",
+        "explanation": "Because bleaching happens when water is too warm and 'rising ocean temperatures are now more frequent', it can be inferred that bleaching is likely to increase."
+      }
+    ]
+  },
+  {
+    "id": "reading_int_003",
+    "section": "reading",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "sleep and memory",
+    "passage": "For many years, people thought of sleep simply as a period of rest, a time when the body and brain shut down. Recent research, however, suggests that the sleeping brain is surprisingly active and that sleep plays an essential role in learning and memory. During the day, the brain takes in a huge amount of information. During sleep, it appears to sort through this information, strengthening important memories and discarding details that are not needed.\n\nScientists have observed that people who sleep well after studying tend to remember new material better than those who stay awake. In several experiments, students who learned a task and then slept performed more accurately the next day than students who learned the same task but were kept awake. Researchers believe that certain stages of sleep help move information from short-term storage into more permanent memory. These findings have practical consequences. They suggest that students who sacrifice sleep in order to study longer may actually harm their performance, because the brain needs sleep to organize and store what has been learned.",
+    "questions": [
+      {
+        "id": "reading_int_003_q1",
+        "type": "main_idea",
+        "question": "What is the main idea of the passage?",
+        "options": {
+          "A": "Students should never study at night",
+          "B": "Sleep is a period when the brain does nothing",
+          "C": "Sleep plays an important role in learning and memory",
+          "D": "Memory has no connection to the brain"
+        },
+        "answer": "C",
+        "explanation": "The passage argues that sleep is active and helps the brain store memories. This is the main idea."
+      },
+      {
+        "id": "reading_int_003_q2",
+        "type": "detail",
+        "question": "According to the passage, what did students who slept after studying do compared with those who stayed awake?",
+        "options": {
+          "A": "They remembered the material better",
+          "B": "They forgot the material completely",
+          "C": "They studied for a longer time",
+          "D": "They performed exactly the same"
+        },
+        "answer": "A",
+        "explanation": "The passage states that students who slept 'performed more accurately the next day' than those who were kept awake."
+      },
+      {
+        "id": "reading_int_003_q3",
+        "type": "inference",
+        "question": "What can be inferred about students who give up sleep to study longer?",
+        "options": {
+          "A": "They will always get higher scores",
+          "B": "They may reduce their ability to remember what they studied",
+          "C": "They do not need to review the material",
+          "D": "They learn faster than other students"
+        },
+        "answer": "B",
+        "explanation": "Since the brain needs sleep to store memories, it can be inferred that students who sacrifice sleep may reduce their ability to remember the material."
+      },
+      {
+        "id": "reading_int_003_q4",
+        "type": "vocabulary_in_context",
+        "question": "The word 'discarding' in the passage is closest in meaning to",
+        "options": {
+          "A": "keeping",
+          "B": "throwing away",
+          "C": "repeating",
+          "D": "collecting"
+        },
+        "answer": "B",
+        "explanation": "The brain is described as 'discarding details that are not needed', meaning throwing them away. 'Throwing away' is the closest meaning."
+      }
+    ]
+  }
+]

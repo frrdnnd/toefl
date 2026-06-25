@@ -1,0 +1,162 @@
+[
+  {
+    "id": "grammar_easy_001",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "subject-verb agreement",
+    "question": "The students in the library ____ very quietly every afternoon.",
+    "options": {
+      "A": "studies",
+      "B": "study",
+      "C": "studying",
+      "D": "to study"
+    },
+    "answer": "B",
+    "explanation": "The plural subject 'The students' requires the base plural verb 'study'. The phrase 'in the library' does not change the subject."
+  },
+  {
+    "id": "grammar_easy_002",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "present tense",
+    "question": "My sister usually ____ to work by bus because she does not have a car.",
+    "options": {
+      "A": "go",
+      "B": "going",
+      "C": "goes",
+      "D": "gone"
+    },
+    "answer": "C",
+    "explanation": "The singular subject 'My sister' with the adverb 'usually' (a habitual action) takes the simple present third-person form 'goes'."
+  },
+  {
+    "id": "grammar_easy_003",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "pronoun reference",
+    "question": "John forgot ____ umbrella, so he got wet in the rain.",
+    "options": {
+      "A": "he",
+      "B": "him",
+      "C": "his",
+      "D": "himself"
+    },
+    "answer": "C",
+    "explanation": "A possessive adjective is needed before the noun 'umbrella'. 'His' shows that the umbrella belongs to John."
+  },
+  {
+    "id": "grammar_easy_004",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "preposition",
+    "question": "The meeting will start ____ nine o'clock on Monday morning.",
+    "options": {
+      "A": "in",
+      "B": "on",
+      "C": "at",
+      "D": "to"
+    },
+    "answer": "C",
+    "explanation": "The preposition 'at' is used with specific clock times, such as 'at nine o'clock'."
+  },
+  {
+    "id": "grammar_easy_005",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "past tense",
+    "question": "Last weekend we ____ a very interesting documentary about the ocean.",
+    "options": {
+      "A": "watch",
+      "B": "watches",
+      "C": "watched",
+      "D": "watching"
+    },
+    "answer": "C",
+    "explanation": "The time expression 'Last weekend' signals a completed past action, so the simple past 'watched' is correct."
+  },
+  {
+    "id": "grammar_easy_006",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "articles",
+    "question": "She is reading ____ interesting book about American history.",
+    "options": {
+      "A": "a",
+      "B": "an",
+      "C": "the",
+      "D": "no article"
+    },
+    "answer": "B",
+    "explanation": "The article 'an' is used before a word beginning with a vowel sound. 'Interesting' begins with the vowel sound /i/."
+  },
+  {
+    "id": "grammar_easy_007",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "subject-verb agreement",
+    "question": "Neither the teacher nor the students ____ ready for the sudden change in schedule.",
+    "options": {
+      "A": "was",
+      "B": "were",
+      "C": "is",
+      "D": "being"
+    },
+    "answer": "B",
+    "explanation": "With 'neither...nor', the verb agrees with the nearer subject. The nearer subject 'the students' is plural, so 'were' is correct."
+  },
+  {
+    "id": "grammar_easy_008",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "modal verbs",
+    "question": "You ____ finish your homework before you watch television tonight.",
+    "options": {
+      "A": "must",
+      "B": "musting",
+      "C": "to must",
+      "D": "musts"
+    },
+    "answer": "A",
+    "explanation": "Modal verbs such as 'must' are followed by the base form of the verb and never change form. 'You must finish' is correct."
+  },
+  {
+    "id": "grammar_easy_009",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "comparison",
+    "question": "This building is much ____ than the one next to it.",
+    "options": {
+      "A": "tall",
+      "B": "taller",
+      "C": "tallest",
+      "D": "more tall"
+    },
+    "answer": "B",
+    "explanation": "When two things are compared and the word 'than' appears, the comparative form is needed. The comparative of the one-syllable adjective 'tall' is 'taller'."
+  },
+  {
+    "id": "grammar_easy_010",
+    "section": "grammar",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "present continuous",
+    "question": "Please be quiet; the baby ____ in the next room right now.",
+    "options": {
+      "A": "sleeps",
+      "B": "sleep",
+      "C": "is sleeping",
+      "D": "slept"
+    },
+    "answer": "C",
+    "explanation": "The phrase 'right now' signals an action in progress, which requires the present continuous tense 'is sleeping'."
+  }
+]

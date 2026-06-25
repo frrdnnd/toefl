@@ -3,8 +3,10 @@ from fastapi import Depends
 
 from sqlalchemy.orm import Session
 
+from app.core.config import normalize_category
 from app.core.database import SessionLocal
 from app.models.history import PracticeHistory
+from app.services import llm_service
 
 router = APIRouter()
 
@@ -19,26 +21,33 @@ def get_db():
 
 @router.get("/weakness-analysis")
 def weakness_analysis(db: Session = Depends(get_db)):
+    rows = db.query(PracticeHistory).all()
 
-    grammar_total = db.query(PracticeHistory)\
-        .filter(PracticeHistory.category == "Grammar")\
-        .count()
+    buckets = {
+        "grammar": {"total": 0, "correct": 0},
+        "vocabulary": {"total": 0, "correct": 0},
+        "reading": {"total": 0, "correct": 0},
+    }
 
-    grammar_wrong = db.query(PracticeHistory)\
-        .filter(
-            PracticeHistory.category == "Grammar",
-            PracticeHistory.is_correct == False
-        )\
-        .count()
+    for row in rows:
+        cat = normalize_category(row.category)
+        if cat in buckets:
+            buckets[cat]["total"] += 1
+            buckets[cat]["correct"] += 1 if row.is_correct else 0
 
-    def calculate(total, wrong):
-        if total == 0:
-            return 100
+    def accuracy(bucket):
+        if bucket["total"] == 0:
+            return 0
+        return round((bucket["correct"] / bucket["total"]) * 100)
 
-        return round(((total - wrong) / total) * 100)
+    analysis = llm_service.analyze_weakness(rows)
 
     return {
-        "grammar": calculate(grammar_total, grammar_wrong),
-        "vocabulary": 80,
-        "reading": 75
+        # Per-category accuracy (keys kept for the existing dashboard charts).
+        "grammar": accuracy(buckets["grammar"]),
+        "vocabulary": accuracy(buckets["vocabulary"]),
+        "reading": accuracy(buckets["reading"]),
+        # AI-tutor style detail.
+        "weak_topics": analysis["weak_topics"],
+        "recommendations": analysis["recommendations"],
     }

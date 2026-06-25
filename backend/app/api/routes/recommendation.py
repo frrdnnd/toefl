@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.models.history import PracticeHistory
+from app.services import llm_service
 
 router = APIRouter()
 
@@ -19,23 +20,33 @@ def get_db():
 
 @router.get("/recommendation")
 def get_recommendation(db: Session = Depends(get_db)):
+    rows = db.query(PracticeHistory).all()
 
-    grammar_wrong = db.query(PracticeHistory)\
-        .filter(
-            PracticeHistory.category == "Grammar",
-            PracticeHistory.is_correct == False
-        )\
-        .count()
+    total = len(rows)
+    correct = sum(1 for row in rows if row.is_correct)
+    accuracy = round((correct / total) * 100) if total else 0
 
-    if grammar_wrong > 5:
+    analysis = llm_service.analyze_weakness(rows)
+
+    recommendations = analysis["recommendations"]
+    weak_topics = analysis["weak_topics"]
+
+    if total == 0:
         recommendation = (
-            "Practice more Subject Verb Agreement questions."
+            "Start practicing to unlock personalized AI recommendations."
         )
     else:
-        recommendation = (
-            "Your TOEFL performance is improving consistently."
-        )
+        recommendation = recommendations[0]
+
+    suggested_difficulty = (
+        "Advanced" if accuracy >= 80
+        else "Intermediate" if accuracy >= 60
+        else "Easy"
+    )
 
     return {
-        "recommendation": recommendation
+        "recommendation": recommendation,
+        "recommendations": recommendations,
+        "weak_topics": weak_topics,
+        "suggested_difficulty": suggested_difficulty,
     }

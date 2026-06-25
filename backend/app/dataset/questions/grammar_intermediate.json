@@ -1,0 +1,162 @@
+[
+  {
+    "id": "grammar_int_001",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "passive voice",
+    "question": "The new bridge ____ by the city government two years before the earthquake struck.",
+    "options": {
+      "A": "had been built",
+      "B": "had built",
+      "C": "has built",
+      "D": "was building"
+    },
+    "answer": "A",
+    "explanation": "The bridge receives the action, so the passive voice is required. Because it happened before another past event, the past perfect passive 'had been built' is correct."
+  },
+  {
+    "id": "grammar_int_002",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "relative clause",
+    "question": "The scientist ____ research changed modern medicine received the Nobel Prize.",
+    "options": {
+      "A": "who",
+      "B": "whom",
+      "C": "whose",
+      "D": "which"
+    },
+    "answer": "C",
+    "explanation": "A possessive relative pronoun is needed to connect 'the scientist' with 'research'. 'Whose' shows that the research belongs to the scientist."
+  },
+  {
+    "id": "grammar_int_003",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "noun clause",
+    "question": "The committee has not yet decided ____ the conference will be held next year.",
+    "options": {
+      "A": "where",
+      "B": "what",
+      "C": "which",
+      "D": "whose"
+    },
+    "answer": "A",
+    "explanation": "The noun clause functions as the object of 'decided' and refers to a place. 'Where' correctly introduces a clause about location."
+  },
+  {
+    "id": "grammar_int_004",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "parallel structure",
+    "question": "The training program teaches employees how to manage time, communicate clearly, and ____ effectively.",
+    "options": {
+      "A": "leading",
+      "B": "to lead",
+      "C": "lead",
+      "D": "led"
+    },
+    "answer": "C",
+    "explanation": "Items in a series must be parallel. To match the base verbs 'manage' and 'communicate', the base form 'lead' is required."
+  },
+  {
+    "id": "grammar_int_005",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "comparison",
+    "question": "The more carefully a student reviews the material, ____ the examination becomes.",
+    "options": {
+      "A": "easy",
+      "B": "the easier",
+      "C": "easier",
+      "D": "the most easy"
+    },
+    "answer": "B",
+    "explanation": "This is a double comparative structure: 'the more..., the more/easier...'. The second clause requires 'the' plus the comparative form 'easier'."
+  },
+  {
+    "id": "grammar_int_006",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "present perfect",
+    "question": "Professor Lewis ____ at this university since the department was founded in 2005.",
+    "options": {
+      "A": "taught",
+      "B": "has taught",
+      "C": "is teaching",
+      "D": "teaches"
+    },
+    "answer": "B",
+    "explanation": "The word 'since' with a starting point in the past requires the present perfect to show an action continuing to the present: 'has taught'."
+  },
+  {
+    "id": "grammar_int_007",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "gerund and infinitive",
+    "question": "The researchers suggested ____ the experiment under more controlled conditions.",
+    "options": {
+      "A": "to repeat",
+      "B": "repeat",
+      "C": "repeating",
+      "D": "repeated"
+    },
+    "answer": "C",
+    "explanation": "The verb 'suggest' is followed by a gerund, not an infinitive. Therefore 'repeating' is correct."
+  },
+  {
+    "id": "grammar_int_008",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "relative clause",
+    "question": "The novel ____ we discussed in class last week has been translated into many languages.",
+    "options": {
+      "A": "what",
+      "B": "that",
+      "C": "who",
+      "D": "where"
+    },
+    "answer": "B",
+    "explanation": "The relative pronoun refers to a thing ('the novel') and acts as the object of 'discussed'. 'That' correctly introduces this restrictive clause."
+  },
+  {
+    "id": "grammar_int_009",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "passive voice",
+    "question": "A large amount of energy ____ when fossil fuels are burned in power plants.",
+    "options": {
+      "A": "releases",
+      "B": "is released",
+      "C": "release",
+      "D": "are released"
+    },
+    "answer": "B",
+    "explanation": "Energy receives the action of being released, so the passive voice is needed. The singular subject 'A large amount of energy' takes 'is released'."
+  },
+  {
+    "id": "grammar_int_010",
+    "section": "grammar",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "noun clause",
+    "question": "____ the global climate is changing is now accepted by most scientists.",
+    "options": {
+      "A": "That",
+      "B": "What",
+      "C": "Which",
+      "D": "It"
+    },
+    "answer": "A",
+    "explanation": "A noun clause beginning with 'That' acts as the subject of the sentence and states an accepted fact: 'That the global climate is changing'."
+  }
+]

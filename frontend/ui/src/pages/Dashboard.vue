@@ -21,7 +21,7 @@
             </p>
           </div>
 
-          <div class="bg-white/15 backdrop-blur rounded-3xl p-6 min-w-[220px]">
+          <div class="bg-white/15 backdrop-blur rounded-3xl p-6 min-w-[240px]">
             <p class="text-blue-100 text-sm">
               Current Accuracy
             </p>
@@ -29,6 +29,21 @@
             <h2 class="text-5xl font-extrabold mt-2">
               {{ store.analytics?.accuracy || 0 }}%
             </h2>
+
+            <div class="mt-4 pt-4 border-t border-white/20 flex items-center justify-between gap-4">
+              <div>
+                <p class="text-blue-100 text-xs">Est. TOEFL ITP</p>
+                <p class="text-2xl font-bold mt-1">
+                  {{ store.analytics?.estimated_toefl_score || '—' }}
+                </p>
+              </div>
+              <div class="text-right">
+                <p class="text-blue-100 text-xs">Level</p>
+                <p class="text-lg font-semibold mt-1">
+                  {{ store.analytics?.learning_level || 'Beginner' }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -119,8 +134,11 @@
                   {{ skill.name }}
                 </h3>
 
-                <span class="font-bold text-blue-600">
-                  {{ skill.value }}%
+                <span
+                  class="font-bold"
+                  :class="skill.total ? 'text-blue-600' : 'text-slate-300'"
+                >
+                  {{ skill.total ? skill.value + '%' : '—' }}
                 </span>
               </div>
 
@@ -214,32 +232,28 @@ onMounted(async () => {
 })
 
 const skillCards = computed(() => {
-  const weakness = store.weakness || {}
+  const stats = store.analytics?.category_stats || {}
 
   return [
-    {
-      name: 'Grammar',
-      value: weakness.grammar || 0,
-      label: 'Grammar accuracy'
-    },
-    {
-      name: 'Vocabulary',
-      value: weakness.vocabulary || 0,
-      label: 'Word usage accuracy'
-    },
-    {
-      name: 'Reading',
-      value: weakness.reading || 0,
-      label: 'Reading skill accuracy'
+    { name: 'Grammar', key: 'grammar' },
+    { name: 'Vocabulary', key: 'vocabulary' },
+    { name: 'Reading', key: 'reading' }
+  ].map(({ name, key }) => {
+    const s = stats[key] || {}
+    const total = s.total ?? 0
+    return {
+      name,
+      value: s.accuracy ?? 0,
+      total,
+      correct: s.correct ?? 0,
+      label: total ? `${s.correct ?? 0}/${total} benar` : 'Belum ada latihan'
     }
-  ]
+  })
 })
 
 const weakestSkill = computed(() => {
-  const sorted = [...skillCards.value].sort(
-    (a, b) => a.value - b.value
-  )
-
-  return sorted[0]?.name || 'Grammar'
+  const practiced = skillCards.value.filter((s) => s.total > 0)
+  if (!practiced.length) return '—'
+  return [...practiced].sort((a, b) => a.value - b.value)[0].name
 })
 </script>

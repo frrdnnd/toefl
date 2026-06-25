@@ -1,0 +1,227 @@
+[
+  {
+    "id": "reading_adv_001",
+    "section": "reading",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "technology and employment",
+    "passage": "Although technological innovation has generally improved productivity and raised living standards, some economists argue that the rapid pace of automation may contribute to a particular kind of joblessness known as structural unemployment. Unlike cyclical unemployment, which rises and falls with the overall health of the economy, structural unemployment occurs when the skills that workers possess no longer match the skills that employers demand. When machines and software can perform tasks that were once carried out by people, certain occupations shrink or disappear entirely, and the workers who held those jobs may find that their experience is suddenly of little value.\n\nThe historical record offers some reassurance, since previous waves of mechanization ultimately created more jobs than they destroyed. The introduction of the automobile, for example, eliminated work associated with horse-drawn transport but generated vast new industries in manufacturing, road construction, and services. Optimists contend that the current technological transition will follow a similar pattern, producing occupations that cannot yet be imagined.\n\nCritics of this optimistic view, however, emphasize an important difference. Earlier technologies tended to replace physical labor, whereas modern systems based on artificial intelligence increasingly perform cognitive tasks, including analysis and decision-making. If machines can be taught to handle work that requires judgment, the range of jobs that remain securely human may be narrower than in the past. Most analysts conclude that the central challenge is not the disappearance of work altogether but the urgent need for education and training systems that can help workers acquire new skills quickly enough to keep pace with change.",
+    "questions": [
+      {
+        "id": "reading_adv_001_q1",
+        "type": "main_idea",
+        "question": "What is the main idea of the passage?",
+        "options": {
+          "A": "Automation always benefits workers immediately",
+          "B": "Governments should slow down technological innovation",
+          "C": "Automation can create challenges for workers whose skills become outdated",
+          "D": "Educational institutions are responsible for unemployment"
+        },
+        "answer": "C",
+        "explanation": "The passage explains that automation can raise productivity but may also cause structural unemployment when workers' skills no longer match demand. This is the main idea."
+      },
+      {
+        "id": "reading_adv_001_q2",
+        "type": "detail",
+        "question": "According to the passage, how does structural unemployment differ from cyclical unemployment?",
+        "options": {
+          "A": "It rises and falls with the overall health of the economy",
+          "B": "It occurs when workers' skills no longer match employers' demands",
+          "C": "It only affects workers in horse-drawn transport",
+          "D": "It disappears whenever new technology is introduced"
+        },
+        "answer": "B",
+        "explanation": "The passage states that, unlike cyclical unemployment, structural unemployment 'occurs when the skills that workers possess no longer match the skills that employers demand'."
+      },
+      {
+        "id": "reading_adv_001_q3",
+        "type": "vocabulary_in_context",
+        "question": "The word 'contend' in the passage is closest in meaning to",
+        "options": {
+          "A": "doubt",
+          "B": "argue",
+          "C": "forget",
+          "D": "measure"
+        },
+        "answer": "B",
+        "explanation": "'Optimists contend that the current technological transition will follow a similar pattern' means they argue or claim it. 'Argue' is the closest meaning."
+      },
+      {
+        "id": "reading_adv_001_q4",
+        "type": "inference",
+        "question": "What can be inferred about modern artificial intelligence systems compared with earlier technologies?",
+        "options": {
+          "A": "They are unable to perform any human tasks",
+          "B": "They may threaten a wider range of jobs because they can perform cognitive work",
+          "C": "They only replace physical labor",
+          "D": "They have created no new industries"
+        },
+        "answer": "B",
+        "explanation": "Because modern systems 'increasingly perform cognitive tasks' rather than only physical labor, it can be inferred that they may threaten a wider range of jobs than earlier technologies."
+      },
+      {
+        "id": "reading_adv_001_q5",
+        "type": "reference",
+        "question": "The word 'those' in the phrase 'the workers who held those jobs' refers to",
+        "options": {
+          "A": "occupations that shrink or disappear",
+          "B": "economists",
+          "C": "machines and software",
+          "D": "living standards"
+        },
+        "answer": "A",
+        "explanation": "'Those jobs' refers back to the occupations that 'shrink or disappear entirely' when machines take over their tasks."
+      }
+    ]
+  },
+  {
+    "id": "reading_adv_002",
+    "section": "reading",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "urbanization and the environment",
+    "passage": "The twentieth and twenty-first centuries have witnessed an unprecedented movement of people from rural areas into cities. For the first time in human history, more than half of the world's population now lives in urban environments, and that proportion continues to climb. This process of urbanization is often associated with environmental harm, and indeed cities consume enormous quantities of energy and generate substantial amounts of waste. Yet a closer examination reveals a more complicated picture, one in which dense urban living may offer certain ecological advantages.\n\nWhen people are concentrated in compact cities, the distances they must travel for work, shopping, and services tend to shrink. Public transportation becomes more practical and efficient, and apartments in tall buildings generally require less energy to heat and cool than detached houses of equivalent size. As a consequence, the average city dweller in a well-planned metropolis may produce fewer greenhouse gas emissions per person than a resident of a spread-out suburb, even though the city as a whole consumes far more in absolute terms.\n\nThis insight has led some urban planners to argue that the solution to environmental problems lies not in abandoning cities but in designing them more intelligently. Compact development, reliable public transit, and the preservation of surrounding natural areas can reduce the ecological footprint of an expanding population. Critics caution, however, that such benefits depend heavily on careful planning and significant investment. Without these, rapid urban growth can instead produce congestion, pollution, and sprawling settlements that combine the disadvantages of both city and countryside.",
+    "questions": [
+      {
+        "id": "reading_adv_002_q1",
+        "type": "main_idea",
+        "question": "What is the main idea of the passage?",
+        "options": {
+          "A": "Cities should be abandoned to protect the environment",
+          "B": "Well-planned dense cities can offer environmental advantages despite their high total consumption",
+          "C": "Suburbs are always better for the environment than cities",
+          "D": "Urbanization has stopped in the twenty-first century"
+        },
+        "answer": "B",
+        "explanation": "The passage argues that although cities consume a lot, dense and well-planned urban living can lower per-person emissions and offer ecological advantages. This is the main idea."
+      },
+      {
+        "id": "reading_adv_002_q2",
+        "type": "detail",
+        "question": "According to the passage, why might apartments require less energy than detached houses of similar size?",
+        "options": {
+          "A": "They are usually empty",
+          "B": "They are located in the countryside",
+          "C": "They generally need less energy to heat and cool",
+          "D": "They do not use public transportation"
+        },
+        "answer": "C",
+        "explanation": "The passage states that 'apartments in tall buildings generally require less energy to heat and cool than detached houses of equivalent size'."
+      },
+      {
+        "id": "reading_adv_002_q3",
+        "type": "vocabulary_in_context",
+        "question": "The word 'compact' in the passage is closest in meaning to",
+        "options": {
+          "A": "densely arranged",
+          "B": "extremely large",
+          "C": "newly built",
+          "D": "poorly designed"
+        },
+        "answer": "A",
+        "explanation": "'Compact cities' are cities in which people and buildings are densely arranged in a small area. 'Densely arranged' is the closest meaning."
+      },
+      {
+        "id": "reading_adv_002_q4",
+        "type": "inference",
+        "question": "What can be inferred about urban growth that occurs without careful planning?",
+        "options": {
+          "A": "It always reduces pollution",
+          "B": "It can produce problems such as congestion and sprawl",
+          "C": "It guarantees lower greenhouse gas emissions",
+          "D": "It removes the need for public transportation"
+        },
+        "answer": "B",
+        "explanation": "The passage warns that without careful planning and investment, rapid urban growth 'can instead produce congestion, pollution, and sprawling settlements'."
+      },
+      {
+        "id": "reading_adv_002_q5",
+        "type": "reference",
+        "question": "The phrase 'such benefits' in the last paragraph refers to",
+        "options": {
+          "A": "the disadvantages of the countryside",
+          "B": "the ecological advantages of compact, well-planned cities",
+          "C": "the growth of the world's population",
+          "D": "the high cost of investment"
+        },
+        "answer": "B",
+        "explanation": "'Such benefits depend heavily on careful planning' refers to the ecological advantages of dense, intelligently designed cities discussed earlier."
+      }
+    ]
+  },
+  {
+    "id": "reading_adv_003",
+    "section": "reading",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "the placebo effect",
+    "passage": "One of the most intriguing phenomena in medical science is the placebo effect, in which patients experience real improvements in their condition after receiving a treatment that has no active therapeutic ingredient. A placebo might be a sugar pill or an injection of harmless saline solution. Although such treatments contain nothing capable of acting directly on disease, carefully controlled studies have repeatedly shown that some patients who receive them report reduced pain, diminished anxiety, and other measurable benefits.\n\nThe mechanisms behind this effect are not fully understood, but researchers believe that expectation plays a central role. When a patient believes that a treatment will help, the brain may release chemicals that influence the perception of pain or alter mood. In this sense, the placebo effect demonstrates the remarkable degree to which mental states can shape physical experience. Notably, the effect appears to be stronger when the patient trusts the physician and when the treatment is presented with confidence.\n\nThe existence of the placebo effect creates a significant challenge for medical research. To determine whether a new drug is genuinely effective, scientists must compare it against a placebo in what is called a controlled trial. Only if the drug produces benefits clearly greater than those of the placebo can researchers conclude that it has real value. Far from being a mere curiosity, then, the placebo effect is woven into the very methods by which modern medicine distinguishes effective treatments from ineffective ones. Some scientists even argue that understanding it better could allow physicians to enhance the benefits of legitimate treatments.",
+    "questions": [
+      {
+        "id": "reading_adv_003_q1",
+        "type": "main_idea",
+        "question": "What is the main idea of the passage?",
+        "options": {
+          "A": "Placebos are more powerful than real medicines",
+          "B": "The placebo effect is real, poorly understood, and important to medical research",
+          "C": "Doctors should stop using controlled trials",
+          "D": "Sugar pills can cure most diseases"
+        },
+        "answer": "B",
+        "explanation": "The passage describes the placebo effect as a genuine phenomenon driven by expectation that is central to how medicine tests new drugs. This is the main idea."
+      },
+      {
+        "id": "reading_adv_003_q2",
+        "type": "detail",
+        "question": "According to the passage, what role does expectation play in the placebo effect?",
+        "options": {
+          "A": "It has no measurable influence",
+          "B": "It causes the disease to spread",
+          "C": "It may lead the brain to release chemicals that affect pain or mood",
+          "D": "It prevents patients from trusting their doctors"
+        },
+        "answer": "C",
+        "explanation": "The passage states that when a patient believes a treatment will help, 'the brain may release chemicals that influence the perception of pain or alter mood'."
+      },
+      {
+        "id": "reading_adv_003_q3",
+        "type": "vocabulary_in_context",
+        "question": "The word 'diminished' in the passage is closest in meaning to",
+        "options": {
+          "A": "increased",
+          "B": "reduced",
+          "C": "imagined",
+          "D": "recorded"
+        },
+        "answer": "B",
+        "explanation": "'Diminished anxiety' means reduced or lessened anxiety. 'Reduced' is the closest meaning."
+      },
+      {
+        "id": "reading_adv_003_q4",
+        "type": "inference",
+        "question": "What can be inferred about a new drug that performs no better than a placebo in a controlled trial?",
+        "options": {
+          "A": "It is probably not genuinely effective",
+          "B": "It is certainly dangerous",
+          "C": "It should immediately replace the placebo",
+          "D": "It cures anxiety but not pain"
+        },
+        "answer": "A",
+        "explanation": "Since a drug is considered valuable only if it produces benefits 'clearly greater than those of the placebo', a drug that performs no better than a placebo is probably not genuinely effective."
+      },
+      {
+        "id": "reading_adv_003_q5",
+        "type": "reference",
+        "question": "The word 'it' in the final sentence ('understanding it better') refers to",
+        "options": {
+          "A": "the controlled trial",
+          "B": "the new drug",
+          "C": "the placebo effect",
+          "D": "the physician"
+        },
+        "answer": "C",
+        "explanation": "'Understanding it better could allow physicians to enhance the benefits of legitimate treatments' refers to understanding the placebo effect."
+      }
+    ]
+  }
+]

@@ -1,20 +1,44 @@
 # SMARTTOEFL AI
 
-SMARTTOEFL AI adalah aplikasi latihan TOEFL berbasis web yang berjalan secara lokal. Aplikasi ini memakai FastAPI sebagai backend, Vue 3 sebagai frontend, SQLite untuk menyimpan riwayat latihan, Chroma vector database untuk RAG, dan Ollama sebagai LLM lokal.
+SMARTTOEFL AI adalah aplikasi latihan TOEFL berbasis AI yang berjalan secara lokal. Aplikasi ini memakai FastAPI sebagai backend, Vue 3 sebagai frontend, SQLite untuk menyimpan riwayat latihan, Chroma vector database untuk RAG, serta mendukung dua penyedia LLM: OpenAI API (`gpt-4o-mini`) dan Ollama lokal.
 
-Tujuan utama project ini adalah membantu user membuat soal TOEFL secara adaptif, menjawab soal, mendapatkan evaluasi bilingual Inggris/Indonesia, serta melihat riwayat dan analitik latihan.
+Tujuan utama project ini adalah membantu user berlatih soal TOEFL ITP yang akademik dan realistis (Grammar, Vocabulary, dan Reading), menjawab soal, mendapatkan evaluasi bilingual Inggris/Indonesia, serta melihat riwayat, analitik, dan estimasi skor TOEFL ITP.
+
+## Section dan Level
+
+Section yang tersedia:
+
+- **Grammar** — soal Structure & Written Expression (subject-verb agreement, tense, inversion, subjunctive, reduced clause, dll).
+- **Vocabulary** — soal closest meaning dari kata akademik di dalam kalimat.
+- **Reading** — passage akademik diikuti beberapa pertanyaan (main idea, detail, vocabulary in context, inference, reference).
+
+Level disesuaikan dengan estimasi TOEFL ITP:
+
+| Level        | Estimasi TOEFL ITP |
+| ------------ | ------------------ |
+| Easy         | 400–450            |
+| Intermediate | 450–520            |
+| Advanced     | 550–650            |
+
+## Mode Soal
+
+- **Dataset** — soal diambil dari bank soal JSON lokal (`backend/app/dataset/questions`).
+- **AI Generate** — soal baru dibuat oleh LLM (OpenAI atau Ollama) sesuai category, difficulty, dan pola TOEFL.
+- **Hybrid** — soal dataset dijadikan acuan, lalu divariasikan oleh LLM.
+
+Jika LLM gagal atau tidak aktif, sistem otomatis fallback ke bank soal lokal sehingga tidak pernah crash.
 
 ## Fitur Utama
 
-- Generate soal TOEFL berdasarkan kategori dan tingkat kesulitan.
-- Kategori utama yang tersedia di UI: Grammar, Vocabulary, dan Reading.
-- Evaluasi jawaban user dengan feedback bilingual.
-- Menampilkan correct answer, explanation, translation, why wrong, grammar tip, dan TOEFL strategy tip.
+- Generate soal TOEFL ITP-style berdasarkan category, difficulty, dan mode.
+- Bank soal lokal: 10 soal Grammar/Vocabulary per level dan 3 passage Reading per level.
+- Reading menampilkan passage lalu beberapa pertanyaan bertipe variatif.
+- Evaluasi jawaban dengan feedback bilingual Inggris/Indonesia.
+- Menampilkan correct answer, explanation, translation, why wrong, grammar tip, TOEFL tip, topic, dan rekomendasi kelemahan.
 - Menyimpan riwayat latihan ke SQLite.
-- Menampilkan analytics, weakness analysis, dan recommendation.
-- Menggunakan dataset lokal dari `backend/app/dataset`.
-- Menggunakan RAG dengan Chroma vectorstore.
-- Menggunakan Ollama lokal, jadi tidak membutuhkan API key LLM eksternal.
+- Analytics: akurasi per category, per difficulty, weakness topics, dan estimasi skor TOEFL ITP.
+- AI Tutor: deteksi kelemahan dari history dan rekomendasi belajar.
+- Mendukung OpenAI API maupun Ollama lokal lewat konfigurasi `.env`.
 
 ## Teknologi
 
@@ -26,7 +50,9 @@ Backend:
 - LangChain
 - ChromaDB
 - HuggingFace sentence-transformers embedding
-- Ollama
+- OpenAI API (`gpt-4o-mini`)
+- Ollama (LLM lokal)
+- python-dotenv
 - pypdf
 
 Frontend:
@@ -93,20 +119,74 @@ Dataset utama berada di:
 backend/app/dataset
 ```
 
+Dataset dibagi menjadi dua fungsi:
+
+1. **Knowledge untuk RAG / AI Tutor** — materi penjelasan: `grammar/`, `vocabulary/`, `reading/`, `overview/`.
+2. **Bank soal untuk Practice** — file JSON di `questions/`.
+
 Struktur dataset:
 
 ```text
 backend/app/dataset/
-+-- grammar/
-+-- reading/
-+-- vocabulary/
-+-- overview/
++-- grammar/                 # knowledge RAG
++-- reading/                 # knowledge RAG
++-- vocabulary/              # knowledge RAG
++-- overview/                # knowledge RAG
++-- questions/               # bank soal Practice (JSON)
+|   +-- grammar_easy.json
+|   +-- grammar_intermediate.json
+|   +-- grammar_advanced.json
+|   +-- vocabulary_easy.json
+|   +-- vocabulary_intermediate.json
+|   +-- vocabulary_advanced.json
+|   +-- reading_easy.json
+|   +-- reading_intermediate.json
+|   +-- reading_advanced.json
 +-- listening/
 |   +-- audio/
 |   +-- transcript/
 +-- speaking/
     +-- prompts/
     +-- rubric/
+```
+
+Format JSON Grammar/Vocabulary:
+
+```json
+{
+  "id": "grammar_adv_001",
+  "section": "grammar",
+  "difficulty": "advanced",
+  "estimated_toefl_range": "550-650",
+  "topic": "inversion",
+  "question": "Not until the early twentieth century ____ to improve the living conditions of workers.",
+  "options": { "A": "did governments begin", "B": "governments began", "C": "began governments", "D": "had governments begun" },
+  "answer": "A",
+  "explanation": "After 'Not until', the sentence requires inversion: auxiliary + subject + main verb."
+}
+```
+
+Format JSON Reading (passage + beberapa pertanyaan):
+
+```json
+{
+  "id": "reading_adv_001",
+  "section": "reading",
+  "difficulty": "advanced",
+  "estimated_toefl_range": "550-650",
+  "topic": "technology and employment",
+  "passage": "Although technological innovation has generally improved productivity...",
+  "questions": [
+    {
+      "id": "reading_adv_001_q1",
+      "type": "main_idea",
+      "question": "What is the main idea of the passage?",
+      "options": { "A": "...", "B": "...", "C": "...", "D": "..." },
+      "answer": "C",
+      "explanation": "..."
+    }
+  ]
+}
 ```
 
 Dataset yang dipakai langsung oleh RAG hanya file:
@@ -145,6 +225,19 @@ RAG diproses oleh:
 backend/app/services/rag_service.py
 ```
 
+### Bagaimana RAG dipakai saat runtime
+
+RAG aktif saat `USE_RAG=true` dan provider LLM aktif (`openai`/`ollama`):
+
+- **Generate soal AI/Hybrid** — `get_context()` mengambil materi TOEFL relevan, lalu disuntik ke prompt sebagai referensi gaya/topik akademik.
+- **AI Tutor (penjelasan jawaban)** — saat user submit, materi terkait diambil dari vectorstore agar penjelasan lebih akurat dan berbasis materi resmi.
+- Embedding model dan vectorstore di-cache (singleton) dan di-*warm up* di background saat startup, sehingga query berikutnya cepat (sub-detik).
+- Field `rag_used` muncul di response API dan ditampilkan sebagai badge **RAG** di kartu soal.
+- Cek status RAG: `GET /api/rag/status` → `{ enabled, ready, top_k, provider }`.
+- Mode `dataset` tidak memakai RAG (soal murni dari JSON).
+
+### Build index
+
 Alurnya:
 
 1. `build_vectorstore()` membaca semua file `.txt` dan `.pdf` dari `app/dataset`.
@@ -179,43 +272,27 @@ Practice.vue
 -> useToeflStore.js
 -> questionService.js
 -> api.js
--> POST /generate-question
+-> GET /api/questions/generate?category=&difficulty=&mode=
 -> backend/app/api/routes/question.py
--> get_context() dari rag_service.py
--> ask_llm_generate() dari llm_service.py
--> Ollama qwen2.5:1.5b
--> response JSON soal
+-> llm_service.generate_question(category, difficulty, mode)
+   - mode dataset -> question_bank (JSON lokal)
+   - mode ai      -> OpenAI / Ollama, fallback ke dataset
+   - mode hybrid  -> dataset jadi seed, divariasikan LLM
+-> response { success, source, data }
 -> currentQuestion di Pinia
--> QuestionCard.vue menampilkan soal
+-> QuestionCard.vue / ReadingCard.vue menampilkan soal
 ```
 
 Detail proses backend:
 
-1. Frontend mengirim `category` dan `difficulty`.
-2. Backend mengambil konteks dari Chroma vectorstore.
-3. Backend membuat prompt berisi TOEFL material dari RAG.
-4. Ollama generate soal dalam format JSON.
-5. Backend membersihkan dan validasi JSON.
-6. Jika LLM gagal, backend memakai fallback question.
-7. Response dikirim kembali ke frontend.
-
-Contoh response:
-
-```json
-{
-  "question": "Choose the closest meaning of the word research.",
-  "options": [
-    "A. Guess",
-    "B. Study",
-    "C. Ignore",
-    "D. Sleep"
-  ],
-  "answer": "B",
-  "explanation": "Research means careful study.",
-  "difficulty": "Easy",
-  "category": "Vocabulary"
-}
-```
+1. Frontend mengirim `category`, `difficulty`, dan `mode`.
+2. `llm_service.generate_question` memilih sumber soal sesuai `mode`.
+3. Untuk mode `ai`/`hybrid`, prompt per-category dibangun (Grammar/Vocabulary/Reading) sesuai pola TOEFL ITP dan estimasi skor.
+4. Jika `USE_RAG=true`, `rag_service.get_context()` mengambil materi TOEFL relevan dari vectorstore dan disuntikkan ke prompt (grounding). Field `rag_used` menandai apakah RAG dipakai.
+5. Provider LLM (OpenAI atau Ollama) menghasilkan JSON, lalu divalidasi.
+6. Jika LLM gagal/tidak aktif, backend fallback ke bank soal JSON lokal.
+7. Response berisi `source` (`dataset`/`openai`/`ollama`), `rag_used`, dan `data` soal.
+8. Frontend menampilkan QuestionCard (Grammar/Vocabulary) atau ReadingCard (Reading) lengkap dengan badge.
 
 ## Alur Submit dan Evaluasi Jawaban
 
@@ -303,8 +380,11 @@ Data yang disimpan:
 
 ```text
 GET    /
-POST   /generate-question
-POST   /evaluate-answer
+GET    /api/questions/generate
+POST   /api/questions/check-answer
+GET    /api/rag/status
+POST   /generate-question        (legacy)
+POST   /evaluate-answer          (legacy)
 GET    /history
 DELETE /history
 GET    /analytics
@@ -315,13 +395,90 @@ GET    /weakness-analysis
 Keterangan:
 
 - `GET /` untuk health check backend.
-- `POST /generate-question` untuk membuat soal baru.
-- `POST /evaluate-answer` untuk mengevaluasi jawaban dan menyimpan history.
+- `GET /api/questions/generate?category=&difficulty=&mode=` untuk membuat soal. `mode` = `dataset` / `ai` / `hybrid`.
+- `POST /api/questions/check-answer` untuk mengevaluasi satu jawaban, menyimpan history, dan memberi rekomendasi kelemahan.
+- `POST /generate-question` dan `POST /evaluate-answer` adalah endpoint lama yang tetap dipertahankan agar kompatibel.
 - `GET /history` untuk mengambil riwayat latihan.
 - `DELETE /history` untuk menghapus riwayat latihan.
-- `GET /analytics` untuk statistik latihan.
+- `GET /analytics` untuk statistik latihan (akurasi per category/difficulty, weakness topics, estimasi skor TOEFL).
 - `GET /recommendation` untuk rekomendasi belajar.
 - `GET /weakness-analysis` untuk ringkasan kelemahan.
+
+Contoh response `GET /api/questions/generate` (Grammar/Vocabulary):
+
+```json
+{
+  "success": true,
+  "source": "dataset",
+  "data": {
+    "id": "grammar_adv_001",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "inversion",
+    "question": "...",
+    "options": { "A": "...", "B": "...", "C": "...", "D": "..." },
+    "answer": "A",
+    "explanation": "..."
+  }
+}
+```
+
+Untuk Reading, `data` berisi `passage` dan array `questions`. Field `source` bernilai `dataset`, `openai`, atau `ollama`.
+
+Contoh response `POST /api/questions/check-answer`:
+
+```json
+{
+  "is_correct": false,
+  "correct_answer": "A",
+  "correct_answer_text": "A. did governments begin",
+  "explanation": "...",
+  "weakness_detected": "inversion",
+  "recommendation": "Practice inversion after negative adverbials such as Not until, Never, Rarely, and Seldom."
+}
+```
+
+## Konfigurasi LLM Provider (.env)
+
+Salin `backend/.env.example` menjadi `backend/.env`, lalu pilih provider lewat `LLM_PROVIDER`.
+
+Menggunakan OpenAI API (stabil, kualitas soal lebih baik):
+
+```env
+LLM_PROVIDER=openai
+OPENAI_API_KEY=your_api_key
+OPENAI_MODEL=gpt-4o-mini
+```
+
+Menggunakan Ollama lokal (gratis, offline, tanpa API key):
+
+```env
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:1.5b
+```
+
+Tanpa LLM (selalu pakai bank soal lokal):
+
+```env
+LLM_PROVIDER=dataset
+```
+
+Grounding RAG (default aktif) dapat diatur lewat:
+
+```env
+USE_RAG=true
+RAG_TOP_K=3
+```
+
+Catatan:
+
+- `LLM_PROVIDER=openai` cocok untuk generate soal TOEFL yang lebih stabil.
+- `LLM_PROVIDER=ollama` tetap bisa dipakai sebagai alternatif gratis.
+- Jika provider error atau mode `dataset`, sistem fallback ke bank soal JSON lokal.
+- `USE_RAG=true` membuat soal AI (mode `ai`/`hybrid`) dan penjelasan AI Tutor di-grounding dengan materi TOEFL dari vectorstore. Set `false` untuk mematikan RAG.
+- File `.env` sudah masuk `.gitignore`, jadi API key tidak ikut ter-commit.
 
 ## Cara Menjalankan Backend
 
@@ -345,19 +502,21 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Install model Ollama:
+Siapkan file `.env` (pilih provider LLM):
+
+```powershell
+Copy-Item .env.example .env
+# lalu edit .env sesuai provider (openai / ollama / dataset)
+```
+
+Install model Ollama (hanya jika `LLM_PROVIDER=ollama`):
 
 ```powershell
 ollama pull qwen2.5:1.5b
-```
-
-Pastikan Ollama berjalan:
-
-```powershell
 ollama list
 ```
 
-Build RAG vectorstore:
+Build RAG vectorstore (untuk grounding soal AI & AI Tutor; cukup sekali, ulangi hanya jika dataset berubah):
 
 ```powershell
 python build_rag.py
@@ -419,19 +578,39 @@ Jika menggunakan file `.env`, pastikan:
 VITE_API_URL=http://127.0.0.1:8000
 ```
 
+## Screenshot
+
+Letakkan screenshot di folder `docs/screenshots/` lalu tampilkan di sini:
+
+```text
+docs/screenshots/practice.png    # Halaman Practice (soal + mode + badge)
+docs/screenshots/dashboard.png   # Dashboard progress + estimasi TOEFL
+docs/screenshots/history.png     # Riwayat latihan
+docs/screenshots/analytics.png   # Analytics (akurasi per category/difficulty)
+```
+
+Contoh penulisan di README:
+
+```markdown
+![Practice](docs/screenshots/practice.png)
+![Dashboard](docs/screenshots/dashboard.png)
+![History](docs/screenshots/history.png)
+![Analytics](docs/screenshots/analytics.png)
+```
+
 ## Workflow Penggunaan
 
-1. Jalankan Ollama.
+1. Atur `backend/.env` (pilih `openai`, `ollama`, atau `dataset`).
 2. Jalankan backend FastAPI.
 3. Jalankan frontend Vue.
 4. Buka halaman web.
-5. Pilih kategori: Grammar, Vocabulary, atau Reading.
+5. Pilih category: Grammar, Vocabulary, atau Reading.
 6. Pilih difficulty: Easy, Intermediate, atau Advanced.
-7. Klik Generate Question.
-8. Pilih jawaban.
-9. Klik Submit Answer.
-10. Lihat hasil evaluasi dan tips.
-11. Buka Dashboard/History untuk melihat progress.
+7. Pilih mode: Dataset, AI Generate, atau Hybrid.
+8. Klik Generate Question.
+9. Jawab soal (untuk Reading, jawab semua pertanyaan di bawah passage).
+10. Klik Submit, lihat hasil evaluasi, penjelasan, topic, dan rekomendasi.
+11. Buka Dashboard/Analytics untuk melihat progress dan estimasi skor TOEFL.
 
 ## Catatan Kategori
 

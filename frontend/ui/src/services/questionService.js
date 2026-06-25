@@ -2,52 +2,44 @@ import api from './api'
 
 export default {
 
-  async generateQuestion(data) {
-    // api interceptor sudah return response.data, jadi tidak perlu .data lagi
-    const response = await api.post('/generate-question', data)
+  // New API: generate a question from the dataset / AI / hybrid pipeline.
+  // Returns { success, source, data }.
+  async generateQuestion({ category, difficulty, mode = 'dataset' }) {
+    const response = await api.get('/api/questions/generate', {
+      params: { category, difficulty, mode }
+    })
     return response
   },
 
+  // New API: check a single answer. Returns evaluation + recommendation.
+  async checkAnswer(payload) {
+    const response = await api.post('/api/questions/check-answer', payload)
+    return response
+  },
+
+  // Legacy endpoints kept for backward compatibility.
   async evaluateAnswer(data) {
-    console.log('\n[Service] evaluateAnswer called')
-    console.log('[Service] Payload:', data)
-    try {
-      console.log('[Service] Making POST request to /evaluate-answer')
-      const response = await api.post('/evaluate-answer', data)
-      console.log('[Service] Response received:', response)
-      console.log('[Service] Response type:', typeof response)
-      console.log('[Service] Response is array:', Array.isArray(response))
-      console.log('[Service] Response keys:', Object.keys(response))
-      return response
-    } catch (error) {
-      console.error('[Service] Evaluation error:', error.message)
-      console.error('[Service] Full error:', error)
-      throw error
-    }
+    const response = await api.post('/evaluate-answer', data)
+    return response
   },
 
   async getHistory() {
-    const response = await api.get('/history')
-    return response
+    return await api.get('/history')
   },
 
   async clearHistory() {
-    const response = await api.delete('/history')
-    return response
+    return await api.delete('/history')
   },
 
   async getAnalytics() {
-    const response = await api.get('/analytics')
-    return response
+    return await api.get('/analytics')
   },
 
   async getRecommendation() {
-    const response = await api.get('/recommendation')
-    return response
+    return await api.get('/recommendation')
   },
 
   async getWeaknessAnalysis() {
-    const response = await api.get('/weakness-analysis')
-    return response
+    return await api.get('/weakness-analysis')
   }
 }

@@ -17,6 +17,12 @@ class PracticeHistory(Base):
     category = Column(String)
     difficulty = Column(String)
 
+    # Estimated TOEFL ITP score range for this question's difficulty, e.g. "550-650".
+    estimated_toefl_range = Column(String)
+
+    # Fine-grained TOEFL topic/skill, e.g. "inversion" or "inference".
+    topic = Column(String)
+
     question = Column(String)
 
     user_answer = Column(String)

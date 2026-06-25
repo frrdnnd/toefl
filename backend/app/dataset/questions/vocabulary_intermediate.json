@@ -1,0 +1,162 @@
+[
+  {
+    "id": "vocab_int_001",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The findings of the study were 'consistent' with earlier research on the topic. The word 'consistent' is closest in meaning to",
+    "options": {
+      "A": "in agreement",
+      "B": "in conflict",
+      "C": "unrelated",
+      "D": "incomplete"
+    },
+    "answer": "A",
+    "explanation": "When results are 'consistent' with other results, they agree with or match them. 'In agreement' is the closest meaning."
+  },
+  {
+    "id": "vocab_int_002",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The government introduced measures to 'enhance' the quality of public education. The word 'enhance' is closest in meaning to",
+    "options": {
+      "A": "reduce",
+      "B": "improve",
+      "C": "replace",
+      "D": "measure"
+    },
+    "answer": "B",
+    "explanation": "To 'enhance' something means to improve its quality or value. 'Improve' is the closest synonym."
+  },
+  {
+    "id": "vocab_int_003",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The author presents a 'compelling' argument in favor of renewable energy. The word 'compelling' is closest in meaning to",
+    "options": {
+      "A": "weak",
+      "B": "boring",
+      "C": "convincing",
+      "D": "confusing"
+    },
+    "answer": "C",
+    "explanation": "A 'compelling' argument is persuasive and convincing. 'Convincing' is the closest meaning."
+  },
+  {
+    "id": "vocab_int_004",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "Economic conditions can 'influence' the choices that consumers make. The word 'influence' is closest in meaning to",
+    "options": {
+      "A": "affect",
+      "B": "ignore",
+      "C": "record",
+      "D": "prevent"
+    },
+    "answer": "A",
+    "explanation": "To 'influence' something is to have an effect on it. 'Affect' is the closest synonym."
+  },
+  {
+    "id": "vocab_int_005",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The two theories appear to be 'distinct', each explaining a different phenomenon. The word 'distinct' is closest in meaning to",
+    "options": {
+      "A": "similar",
+      "B": "separate",
+      "C": "popular",
+      "D": "complicated"
+    },
+    "answer": "B",
+    "explanation": "Something 'distinct' is clearly different or separate from others. 'Separate' is the closest meaning."
+  },
+  {
+    "id": "vocab_int_006",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "Researchers tried to 'demonstrate' the relationship between diet and health. The word 'demonstrate' is closest in meaning to",
+    "options": {
+      "A": "hide",
+      "B": "doubt",
+      "C": "show",
+      "D": "forget"
+    },
+    "answer": "C",
+    "explanation": "To 'demonstrate' something is to show or prove it clearly. 'Show' is the closest synonym."
+  },
+  {
+    "id": "vocab_int_007",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The new manager made a 'significant' contribution to the company's success. The word 'significant' is closest in meaning to",
+    "options": {
+      "A": "important",
+      "B": "minor",
+      "C": "temporary",
+      "D": "unexpected"
+    },
+    "answer": "A",
+    "explanation": "'Significant' means large enough to be noticed or important. 'Important' is the closest meaning."
+  },
+  {
+    "id": "vocab_int_008",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The committee will 'evaluate' each proposal before making a decision. The word 'evaluate' is closest in meaning to",
+    "options": {
+      "A": "assess",
+      "B": "approve",
+      "C": "ignore",
+      "D": "announce"
+    },
+    "answer": "A",
+    "explanation": "To 'evaluate' means to judge the value or quality of something. 'Assess' is the closest synonym."
+  },
+  {
+    "id": "vocab_int_009",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "Modern cities face 'numerous' challenges related to transportation. The word 'numerous' is closest in meaning to",
+    "options": {
+      "A": "few",
+      "B": "many",
+      "C": "serious",
+      "D": "similar"
+    },
+    "answer": "B",
+    "explanation": "'Numerous' means existing in large numbers. 'Many' is the closest synonym."
+  },
+  {
+    "id": "vocab_int_010",
+    "section": "vocabulary",
+    "difficulty": "intermediate",
+    "estimated_toefl_range": "450-520",
+    "topic": "academic vocabulary",
+    "question": "The bridge was designed to 'withstand' strong winds and heavy rain. The word 'withstand' is closest in meaning to",
+    "options": {
+      "A": "resist",
+      "B": "collapse",
+      "C": "attract",
+      "D": "produce"
+    },
+    "answer": "A",
+    "explanation": "To 'withstand' something is to remain strong against it without being damaged. 'Resist' is the closest meaning."
+  }
+]

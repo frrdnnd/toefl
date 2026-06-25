@@ -1,0 +1,162 @@
+[
+  {
+    "id": "vocab_easy_001",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The professor asked the students to 'identify' the main causes of the problem. The word 'identify' is closest in meaning to",
+    "options": {
+      "A": "ignore",
+      "B": "recognize",
+      "C": "create",
+      "D": "delay"
+    },
+    "answer": "B",
+    "explanation": "To 'identify' something means to recognize or name it. 'Recognize' is the closest synonym."
+  },
+  {
+    "id": "vocab_easy_002",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "Researchers tried to 'obtain' accurate data from many different sources. The word 'obtain' is closest in meaning to",
+    "options": {
+      "A": "lose",
+      "B": "hide",
+      "C": "get",
+      "D": "waste"
+    },
+    "answer": "C",
+    "explanation": "To 'obtain' means to get or acquire something. 'Get' is the closest synonym."
+  },
+  {
+    "id": "vocab_easy_003",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The two countries decided to 'cooperate' on the new environmental project. The word 'cooperate' is closest in meaning to",
+    "options": {
+      "A": "compete",
+      "B": "work together",
+      "C": "disagree",
+      "D": "separate"
+    },
+    "answer": "B",
+    "explanation": "To 'cooperate' means to work together toward a common goal. 'Work together' is the closest meaning."
+  },
+  {
+    "id": "vocab_easy_004",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The instructions were very 'clear', so the students finished the task quickly. The word 'clear' is closest in meaning to",
+    "options": {
+      "A": "confusing",
+      "B": "easy to understand",
+      "C": "difficult",
+      "D": "boring"
+    },
+    "answer": "B",
+    "explanation": "When information is 'clear', it is easy to understand. The closest meaning is 'easy to understand'."
+  },
+  {
+    "id": "vocab_easy_005",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The company will 'provide' free training for all new employees. The word 'provide' is closest in meaning to",
+    "options": {
+      "A": "supply",
+      "B": "remove",
+      "C": "sell",
+      "D": "borrow"
+    },
+    "answer": "A",
+    "explanation": "To 'provide' means to give or supply something. 'Supply' is the closest synonym."
+  },
+  {
+    "id": "vocab_easy_006",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "Scientists continue to 'examine' the effects of pollution on rivers. The word 'examine' is closest in meaning to",
+    "options": {
+      "A": "study",
+      "B": "forget",
+      "C": "build",
+      "D": "enjoy"
+    },
+    "answer": "A",
+    "explanation": "To 'examine' something means to study or inspect it carefully. 'Study' is the closest meaning."
+  },
+  {
+    "id": "vocab_easy_007",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The new law had a positive 'effect' on small businesses. The word 'effect' is closest in meaning to",
+    "options": {
+      "A": "result",
+      "B": "question",
+      "C": "problem",
+      "D": "plan"
+    },
+    "answer": "A",
+    "explanation": "An 'effect' is a result or consequence of an action. 'Result' is the closest synonym."
+  },
+  {
+    "id": "vocab_easy_008",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The report contains 'sufficient' information to support the conclusion. The word 'sufficient' is closest in meaning to",
+    "options": {
+      "A": "enough",
+      "B": "missing",
+      "C": "wrong",
+      "D": "extra"
+    },
+    "answer": "A",
+    "explanation": "'Sufficient' means as much as is needed. 'Enough' is the closest synonym."
+  },
+  {
+    "id": "vocab_easy_009",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The teacher will 'select' three students to represent the class. The word 'select' is closest in meaning to",
+    "options": {
+      "A": "punish",
+      "B": "choose",
+      "C": "teach",
+      "D": "follow"
+    },
+    "answer": "B",
+    "explanation": "To 'select' means to choose from a group. 'Choose' is the closest synonym."
+  },
+  {
+    "id": "vocab_easy_010",
+    "section": "vocabulary",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "academic vocabulary",
+    "question": "The museum is 'located' in the center of the old city. The word 'located' is closest in meaning to",
+    "options": {
+      "A": "situated",
+      "B": "closed",
+      "C": "destroyed",
+      "D": "painted"
+    },
+    "answer": "A",
+    "explanation": "To be 'located' somewhere means to be situated or positioned there. 'Situated' is the closest meaning."
+  }
+]

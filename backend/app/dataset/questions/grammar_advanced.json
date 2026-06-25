@@ -1,0 +1,162 @@
+[
+  {
+    "id": "grammar_adv_001",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "inversion",
+    "question": "Not until the early twentieth century ____ to improve the living conditions of workers.",
+    "options": {
+      "A": "did governments begin",
+      "B": "governments began",
+      "C": "began governments",
+      "D": "had governments begun"
+    },
+    "answer": "A",
+    "explanation": "When a negative adverbial such as 'Not until' begins a sentence, the subject and auxiliary are inverted: auxiliary + subject + main verb, giving 'did governments begin'."
+  },
+  {
+    "id": "grammar_adv_002",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "subjunctive",
+    "question": "The board of directors insisted that the new policy ____ effective immediately.",
+    "options": {
+      "A": "is",
+      "B": "be",
+      "C": "was",
+      "D": "to be"
+    },
+    "answer": "B",
+    "explanation": "After verbs of demand or request such as 'insist', the subjunctive uses the base form of the verb regardless of subject, giving 'that the new policy be effective'."
+  },
+  {
+    "id": "grammar_adv_003",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "reduced adjective clause",
+    "question": "The theory ____ by the young physicist eventually transformed our understanding of light.",
+    "options": {
+      "A": "proposed",
+      "B": "proposing",
+      "C": "which proposing",
+      "D": "was proposed"
+    },
+    "answer": "A",
+    "explanation": "The full clause 'which was proposed by the young physicist' is reduced by deleting 'which was', leaving the past participle 'proposed' to introduce a passive reduced clause."
+  },
+  {
+    "id": "grammar_adv_004",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "conditional sentence",
+    "question": "Had the researchers controlled for temperature, the results ____ far more reliable.",
+    "options": {
+      "A": "would be",
+      "B": "will have been",
+      "C": "would have been",
+      "D": "had been"
+    },
+    "answer": "C",
+    "explanation": "This is an inverted third conditional ('Had the researchers controlled' = 'If the researchers had controlled'). The main clause requires 'would have been'."
+  },
+  {
+    "id": "grammar_adv_005",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "inversion",
+    "question": "Rarely ____ such a sudden shift in public opinion as the one observed during that decade.",
+    "options": {
+      "A": "historians have witnessed",
+      "B": "have historians witnessed",
+      "C": "historians witnessed",
+      "D": "witnessed historians"
+    },
+    "answer": "B",
+    "explanation": "The negative adverb 'Rarely' at the start of a sentence triggers inversion of the auxiliary and subject: 'have historians witnessed'."
+  },
+  {
+    "id": "grammar_adv_006",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "reduced adverb clause",
+    "question": "____ exposed to sunlight for long periods, certain minerals gradually lose their color.",
+    "options": {
+      "A": "When they",
+      "B": "When",
+      "C": "Because of",
+      "D": "While they are"
+    },
+    "answer": "B",
+    "explanation": "A reduced adverb clause keeps the subordinating conjunction but omits the subject and 'be' verb. 'When exposed to sunlight' is the correctly reduced form."
+  },
+  {
+    "id": "grammar_adv_007",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "subject-verb agreement",
+    "question": "The number of species threatened with extinction ____ increasing at an alarming rate.",
+    "options": {
+      "A": "are",
+      "B": "is",
+      "C": "have been",
+      "D": "were"
+    },
+    "answer": "B",
+    "explanation": "The phrase 'The number of' takes a singular verb, whereas 'A number of' takes a plural verb. Therefore 'is increasing' is correct."
+  },
+  {
+    "id": "grammar_adv_008",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "subjunctive",
+    "question": "It is essential that every applicant ____ a complete record of previous employment.",
+    "options": {
+      "A": "submits",
+      "B": "submit",
+      "C": "submitted",
+      "D": "submitting"
+    },
+    "answer": "B",
+    "explanation": "Adjectives of urgency such as 'essential' in 'It is essential that...' require the subjunctive base form 'submit', with no third-person -s."
+  },
+  {
+    "id": "grammar_adv_009",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "complex parallel structure",
+    "question": "The committee was impressed not only by the clarity of the proposal but also ____ of its budget.",
+    "options": {
+      "A": "by the realism",
+      "B": "the realism",
+      "C": "realistic",
+      "D": "how realistic"
+    },
+    "answer": "A",
+    "explanation": "The correlative conjunction 'not only...but also' requires parallel structures. To match the prepositional phrase 'by the clarity', the second part must be 'by the realism'."
+  },
+  {
+    "id": "grammar_adv_010",
+    "section": "grammar",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "inversion",
+    "question": "So complex ____ that researchers are still struggling to model its behavior accurately.",
+    "options": {
+      "A": "the climate system is",
+      "B": "is the climate system",
+      "C": "the climate system",
+      "D": "has the climate system"
+    },
+    "answer": "B",
+    "explanation": "When a sentence begins with 'So + adjective', the subject and verb are inverted: 'So complex is the climate system'."
+  }
+]

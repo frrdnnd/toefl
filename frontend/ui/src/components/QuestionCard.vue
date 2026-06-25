@@ -3,34 +3,41 @@
     v-if="question"
     class="bg-white rounded-3xl border border-blue-100 shadow-sm p-6 space-y-6"
   >
-    <div class="flex items-center justify-between">
-      <span class="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium">
-        {{ question.difficulty }}
-      </span>
-      <span class="text-sm text-slate-500">
-        TOEFL Practice
-      </span>
+    <!-- Meta badges -->
+    <div class="flex items-center justify-between gap-4">
+      <QuestionBadges
+        :category="question.section"
+        :difficulty="question.difficulty"
+        :estimated-range="question.estimated_toefl_range"
+        :topic="question.topic"
+        :source="source"
+        :rag="!!question.rag_used"
+      />
+      <span class="text-sm text-slate-400 whitespace-nowrap">TOEFL Practice</span>
     </div>
 
+    <!-- Question -->
     <h2 class="text-xl font-semibold text-slate-800 leading-relaxed">
       {{ question.question }}
     </h2>
 
+    <!-- Options -->
     <div class="grid gap-4">
       <button
-        v-for="option in question.options"
-        :key="option"
-        @click="selectedAnswer = option.charAt(0)"
+        v-for="letter in letters"
+        :key="letter"
+        @click="selectedAnswer = letter"
         class="w-full text-left p-4 rounded-2xl border transition-all duration-300"
-        :class="selectedAnswer === option.charAt(0)
+        :class="selectedAnswer === letter
           ? 'border-blue-500 bg-blue-50 shadow-sm'
           : 'border-slate-200 hover:border-blue-300 hover:bg-blue-50/40'"
       >
-        {{ option }}
+        <span class="font-bold text-blue-600 mr-2">{{ letter }}.</span>
+        {{ question.options?.[letter] }}
       </button>
     </div>
 
-    <!-- Submit button -->
+    <!-- Submit -->
     <button
       @click="handleSubmit"
       :disabled="!selectedAnswer"
@@ -46,16 +53,19 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import QuestionBadges from '@/components/QuestionBadges.vue'
 
 const props = defineProps({
-  question: Object
+  question: Object,
+  source: { type: String, default: '' }
 })
 
 const emit = defineEmits(['submit-answer'])
 
+const letters = ['A', 'B', 'C', 'D']
 const selectedAnswer = ref(null)
 
-// Reset pilihan setiap kali soal berganti
+// Reset selection whenever a new question is loaded.
 watch(() => props.question, () => {
   selectedAnswer.value = null
 })

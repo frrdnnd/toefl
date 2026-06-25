@@ -1,0 +1,175 @@
+[
+  {
+    "id": "reading_easy_001",
+    "section": "reading",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "honey bees",
+    "passage": "Honey bees are small insects that live together in large groups called colonies. A single colony can contain thousands of bees, and each bee has a special job. The queen bee lays eggs, the worker bees collect food, and the male bees, called drones, help the queen. Worker bees fly from flower to flower to collect a sweet liquid called nectar. They bring the nectar back to the hive and turn it into honey. While they collect nectar, bees also move pollen between flowers. This process, called pollination, helps many plants produce fruits and seeds. For this reason, bees are very important to farmers and to nature.",
+    "questions": [
+      {
+        "id": "reading_easy_001_q1",
+        "type": "main_idea",
+        "question": "What is the passage mainly about?",
+        "options": {
+          "A": "How farmers grow fruits and seeds",
+          "B": "How honey bees live and why they are important",
+          "C": "Why drones are larger than worker bees",
+          "D": "How to build a bee hive at home"
+        },
+        "answer": "B",
+        "explanation": "The passage describes how bees live in colonies, how they make honey, and why they matter to nature and farmers. This is the main idea."
+      },
+      {
+        "id": "reading_easy_001_q2",
+        "type": "detail",
+        "question": "According to the passage, what is the job of the worker bees?",
+        "options": {
+          "A": "To lay eggs",
+          "B": "To help the queen mate",
+          "C": "To collect food",
+          "D": "To protect the drones"
+        },
+        "answer": "C",
+        "explanation": "The passage states that 'the worker bees collect food', which is their job."
+      },
+      {
+        "id": "reading_easy_001_q3",
+        "type": "vocabulary_in_context",
+        "question": "The word 'process' in the passage is closest in meaning to",
+        "options": {
+          "A": "problem",
+          "B": "series of actions",
+          "C": "machine",
+          "D": "mistake"
+        },
+        "answer": "B",
+        "explanation": "Here 'process' refers to pollination, a natural series of actions. 'Series of actions' is the closest meaning."
+      },
+      {
+        "id": "reading_easy_001_q4",
+        "type": "reference",
+        "question": "The word 'They' in the passage refers to",
+        "options": {
+          "A": "flowers",
+          "B": "worker bees",
+          "C": "farmers",
+          "D": "seeds"
+        },
+        "answer": "B",
+        "explanation": "'They bring the nectar back to the hive' refers to the worker bees that fly from flower to flower."
+      }
+    ]
+  },
+  {
+    "id": "reading_easy_002",
+    "section": "reading",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "public libraries",
+    "passage": "A public library is a place where people can borrow books for free. Most libraries are open to everyone in the community. To borrow a book, a person usually needs a library card, which is also free. Modern libraries offer much more than books. Many of them have computers, internet access, and quiet rooms for studying. Some libraries also lend movies, music, and electronic books that people can read on their phones or tablets. Libraries often hold special events, such as reading clubs for children and classes for adults. Because these services do not cost money, libraries help people who cannot afford to buy many books or own a computer at home.",
+    "questions": [
+      {
+        "id": "reading_easy_002_q1",
+        "type": "main_idea",
+        "question": "What is the main idea of the passage?",
+        "options": {
+          "A": "Libraries are only useful for children",
+          "B": "Public libraries offer many free and useful services",
+          "C": "People should buy more books",
+          "D": "Computers are replacing books in libraries"
+        },
+        "answer": "B",
+        "explanation": "The passage explains that libraries offer many free services such as books, computers, and events. This is the main idea."
+      },
+      {
+        "id": "reading_easy_002_q2",
+        "type": "detail",
+        "question": "According to the passage, what does a person usually need in order to borrow a book?",
+        "options": {
+          "A": "A computer",
+          "B": "Money",
+          "C": "A library card",
+          "D": "A tablet"
+        },
+        "answer": "C",
+        "explanation": "The passage states that 'to borrow a book, a person usually needs a library card'."
+      },
+      {
+        "id": "reading_easy_002_q3",
+        "type": "inference",
+        "question": "What can be inferred about libraries from the passage?",
+        "options": {
+          "A": "They are becoming less popular every year",
+          "B": "They help reduce inequality in access to information",
+          "C": "They only serve students",
+          "D": "They charge a small fee for special events"
+        },
+        "answer": "B",
+        "explanation": "Since the services are free and help people who cannot afford books or computers, it can be inferred that libraries help reduce inequality in access to information."
+      },
+      {
+        "id": "reading_easy_002_q4",
+        "type": "vocabulary_in_context",
+        "question": "The word 'afford' in the passage is closest in meaning to",
+        "options": {
+          "A": "have enough money for",
+          "B": "want",
+          "C": "understand",
+          "D": "carry"
+        },
+        "answer": "A",
+        "explanation": "To 'afford' something means to have enough money to pay for it. 'Have enough money for' is the closest meaning."
+      }
+    ]
+  },
+  {
+    "id": "reading_easy_003",
+    "section": "reading",
+    "difficulty": "easy",
+    "estimated_toefl_range": "400-450",
+    "topic": "the water cycle",
+    "passage": "Water on Earth is always moving in a pattern called the water cycle. The sun heats water in oceans, rivers, and lakes. Some of this water becomes a gas called water vapor and rises into the sky. This step is known as evaporation. High in the air, the water vapor becomes cool and forms tiny drops that create clouds. When the drops become heavy, they fall back to the ground as rain or snow. This falling water is called precipitation. The water then flows into rivers and oceans, and the cycle begins again. The water cycle is important because it gives plants, animals, and people the fresh water they need to live.",
+    "questions": [
+      {
+        "id": "reading_easy_003_q1",
+        "type": "main_idea",
+        "question": "What is the passage mainly about?",
+        "options": {
+          "A": "Why the sun is hot",
+          "B": "How water moves around the Earth",
+          "C": "How clouds change color",
+          "D": "Why people need to drink water"
+        },
+        "answer": "B",
+        "explanation": "The passage describes the steps of the water cycle, which is how water moves around the Earth."
+      },
+      {
+        "id": "reading_easy_003_q2",
+        "type": "detail",
+        "question": "According to the passage, what is the step called when water becomes a gas and rises into the sky?",
+        "options": {
+          "A": "Precipitation",
+          "B": "Pollution",
+          "C": "Evaporation",
+          "D": "Collection"
+        },
+        "answer": "C",
+        "explanation": "The passage states that when water 'becomes a gas... and rises into the sky', this step 'is known as evaporation'."
+      },
+      {
+        "id": "reading_easy_003_q3",
+        "type": "reference",
+        "question": "The word 'they' in the passage refers to",
+        "options": {
+          "A": "clouds",
+          "B": "the drops",
+          "C": "the oceans",
+          "D": "the plants"
+        },
+        "answer": "B",
+        "explanation": "'When the drops become heavy, they fall back to the ground' shows that 'they' refers to the drops of water."
+      }
+    ]
+  }
+]

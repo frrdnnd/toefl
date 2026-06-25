@@ -1,15 +1,30 @@
-import json
+"""
+Question generation and answer-checking endpoints.
+
+New (preferred) API:
+    GET  /api/questions/generate?category=&difficulty=&mode=
+    POST /api/questions/check-answer
+
+Legacy API (kept for backward compatibility with older clients):
+    POST /generate-question
+    POST /evaluate-answer
+"""
+
+import uuid
 
 from fastapi import APIRouter
 from fastapi import Depends
+from fastapi import Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.core.config import normalize_category
+from app.core.config import normalize_difficulty
+from app.core.config import estimated_range_for
 from app.core.database import SessionLocal
 from app.models.history import PracticeHistory
-from app.services.llm_service import ask_llm
-from app.services.llm_service import ask_llm_generate
-from app.services.rag_service import get_context
+from app.services import llm_service
+from app.services import question_bank
 
 
 router = APIRouter()
@@ -17,16 +32,34 @@ router = APIRouter()
 
 def get_db():
     db = SessionLocal()
-
     try:
         yield db
     finally:
         db.close()
 
 
+# ---------------------------------------------------------------------------
+# Request models
+# ---------------------------------------------------------------------------
+
 class QuestionRequest(BaseModel):
     category: str
     difficulty: str
+    mode: str = "dataset"
+
+
+class CheckAnswerRequest(BaseModel):
+    question_id: str = ""
+    selected_answer: str
+    correct_answer: str
+    category: str = "grammar"
+    difficulty: str = "intermediate"
+    topic: str = ""
+    # Optional context that lets us give richer feedback without a DB lookup.
+    question: str = ""
+    options: dict | list | None = None
+    explanation: str = ""
+    bilingual: bool = True
 
 
 class EvaluationRequest(BaseModel):
@@ -36,295 +69,281 @@ class EvaluationRequest(BaseModel):
     correct_answer: str
     category: str = "Grammar"
     difficulty: str = "Intermediate"
+    topic: str = ""
 
 
-def get_fallback_question(category: str, difficulty: str):
-    normalized_category = category.lower().strip()
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
-    fallback_questions = {
-        "grammar": {
-            "question": "Choose the correct sentence.",
-            "options": [
-                "A. She go to school.",
-                "B. She goes to school.",
-                "C. She going to school.",
-                "D. She gone to school."
-            ],
-            "answer": "B",
-            "explanation": "Singular subject uses a verb with s/es."
-        },
-        "vocabulary": {
-            "question": "Choose the closest meaning of the word 'essential'.",
-            "options": [
-                "A. Unnecessary",
-                "B. Important",
-                "C. Difficult",
-                "D. Temporary"
-            ],
-            "answer": "B",
-            "explanation": "'Essential' means very important or necessary."
-        },
-        "reading": {
-            "question": (
-                "Read the sentence: 'Many students prefer online classes "
-                "because they offer flexibility.' What is the main reason "
-                "students prefer online classes?"
-            ),
-            "options": [
-                "A. They are more difficult.",
-                "B. They offer flexibility.",
-                "C. They require more books.",
-                "D. They are always free."
-            ],
-            "answer": "B",
-            "explanation": (
-                "The sentence states that students prefer online classes "
-                "because they offer flexibility."
-            )
-        },
-        "listening": {
-            "question": (
-                "A professor says: 'The assignment is due next Monday, "
-                "not this Friday.' When is the assignment due?"
-            ),
-            "options": [
-                "A. This Friday",
-                "B. Next Monday",
-                "C. Tomorrow",
-                "D. Next Friday"
-            ],
-            "answer": "B",
-            "explanation": (
-                "The professor clearly says the assignment is due next Monday."
-            )
-        },
-        "speaking": {
-            "question": (
-                "Which response best answers this TOEFL speaking prompt: "
-                "'Describe a place you like to study and explain why.'"
-            ),
-            "options": [
-                "A. I like studying in the library because it is quiet and helps me focus.",
-                "B. I went to the library yesterday.",
-                "C. Studying is sometimes difficult.",
-                "D. My school has many classrooms."
-            ],
-            "answer": "A",
-            "explanation": (
-                "Option A directly describes a study place and gives a reason."
-            )
-        }
+def _ensure_id(data: dict, category: str, difficulty: str) -> dict:
+    """Make sure a generated question carries a stable id for check-answer."""
+    if not data.get("id"):
+        data["id"] = f"{category}_{difficulty}_{uuid.uuid4().hex[:8]}"
+    return data
+
+
+def _resolve_correct_text(correct_letter: str, options) -> str:
+    """Return a human-readable correct answer like 'A. did governments begin'."""
+    letter = (correct_letter or "").strip().upper()[:1]
+
+    if isinstance(options, dict):
+        text = options.get(letter) or options.get(correct_letter)
+        if text:
+            return f"{letter}. {text}"
+
+    if isinstance(options, list):
+        for option in options:
+            if str(option).strip().upper().startswith(letter):
+                return str(option)
+
+    return letter or str(correct_letter)
+
+
+def _save_history(db, *, category, difficulty, topic, question, user_answer,
+                  correct_answer, is_correct, feedback):
+    history = PracticeHistory(
+        category=category,
+        difficulty=difficulty,
+        estimated_toefl_range=estimated_range_for(difficulty),
+        topic=topic,
+        question=question,
+        user_answer=user_answer,
+        correct_answer=correct_answer,
+        is_correct=is_correct,
+        analysis=feedback.get("explanation", ""),
+        grammar_tip=feedback.get("grammar_tip", ""),
+        improvement=feedback.get("toefl_tip", ""),
+        weakness_detected=(topic if not is_correct else ""),
+    )
+    db.add(history)
+    db.commit()
+    db.refresh(history)
+    return history
+
+
+# ---------------------------------------------------------------------------
+# New API: generate
+# ---------------------------------------------------------------------------
+
+@router.get("/api/questions/generate")
+def api_generate_question(
+    category: str = Query("grammar"),
+    difficulty: str = Query("intermediate"),
+    mode: str = Query("dataset"),
+):
+    cat = normalize_category(category)
+    diff = normalize_difficulty(difficulty)
+
+    data, source = llm_service.generate_question(cat, diff, mode)
+    data = _ensure_id(data, cat, diff)
+
+    return {
+        "success": True,
+        "source": source,
+        "rag_used": bool(data.get("rag_used", False)),
+        "data": data,
     }
 
-    selected_question = fallback_questions.get(
-        normalized_category,
-        fallback_questions["grammar"]
+
+# ---------------------------------------------------------------------------
+# New API: check-answer
+# ---------------------------------------------------------------------------
+
+@router.post("/api/questions/check-answer")
+def api_check_answer(
+    payload: CheckAnswerRequest,
+    db: Session = Depends(get_db),
+):
+    cat = normalize_category(payload.category)
+    diff = normalize_difficulty(payload.difficulty)
+
+    selected = (payload.selected_answer or "").strip().upper()[:1]
+    correct = (payload.correct_answer or "").strip().upper()[:1]
+    is_correct = bool(selected) and selected == correct
+
+    # Resolve options/explanation, falling back to the question bank if needed.
+    options = payload.options
+    explanation = payload.explanation
+    question_text = payload.question
+    topic = (payload.topic or "").strip()
+
+    if (not options or not explanation or not topic) and payload.question_id:
+        stored = question_bank.get_question_by_id(payload.question_id)
+        if stored:
+            options = options or stored.get("options")
+            explanation = explanation or stored.get("explanation", "")
+            question_text = question_text or stored.get("question", "")
+            topic = topic or stored.get("topic") or stored.get("type", "")
+
+    if not topic:
+        topic = cat
+
+    correct_text = _resolve_correct_text(correct, options)
+
+    feedback = llm_service.generate_explanation(
+        question=question_text,
+        options=options,
+        user_answer=selected,
+        correct_answer=correct_text,
+        is_correct=is_correct,
+        base_explanation=explanation,
+        use_llm=payload.bilingual,
+        category=cat,
+    )
+
+    weakness_detected = "" if is_correct else topic
+    recommendation = (
+        "Great job! Keep practicing to maintain your progress."
+        if is_correct
+        else llm_service.recommend_for_topic(topic, cat)
+    )
+
+    _save_history(
+        db,
+        category=payload.category,
+        difficulty=payload.difficulty,
+        topic=topic,
+        question=question_text,
+        user_answer=selected,
+        correct_answer=correct_text,
+        is_correct=is_correct,
+        feedback=feedback,
     )
 
     return {
-        **selected_question,
-        "difficulty": difficulty,
-        "category": category
+        "is_correct": is_correct,
+        "correct_answer": correct,
+        "correct_answer_text": correct_text,
+        "explanation": explanation or feedback.get("explanation", ""),
+        "weakness_detected": weakness_detected,
+        "recommendation": recommendation,
+        "topic": topic,
+        "rag_used": bool(feedback.get("rag_used", False)),
+        # Bilingual extras (preserved from the original UI feature set).
+        "translation": feedback.get("translation", ""),
+        "explanation_id": feedback.get("explanation_id", ""),
+        "why_wrong": feedback.get("why_wrong", "") if not is_correct else "",
+        "why_wrong_id": feedback.get("why_wrong_id", "") if not is_correct else "",
+        "grammar_tip": feedback.get("grammar_tip", ""),
+        "grammar_tip_id": feedback.get("grammar_tip_id", ""),
+        "toefl_tip": feedback.get("toefl_tip", ""),
+        "toefl_tip_id": feedback.get("toefl_tip_id", ""),
     }
 
 
-def clean_ai_json_response(response: str):
-    cleaned = response.strip()
-
-    if cleaned.startswith("```json"):
-        cleaned = cleaned.replace("```json", "")
-        cleaned = cleaned.replace("```", "")
-        cleaned = cleaned.strip()
-    elif cleaned.startswith("```"):
-        cleaned = cleaned.replace("```", "")
-        cleaned = cleaned.strip()
-
-    start_index = cleaned.find("{")
-    end_index = cleaned.rfind("}")
-
-    if start_index != -1 and end_index != -1:
-        cleaned = cleaned[start_index:end_index + 1]
-
-    cleaned = "".join(
-        ch
-        for ch in cleaned
-        if ch in "\n\r\t" or ord(ch) >= 0x20
-    )
-
-    return json.loads(cleaned)
-
+# ---------------------------------------------------------------------------
+# Legacy API: /generate-question (list-style options)
+# ---------------------------------------------------------------------------
 
 @router.post("/generate-question")
 def generate_question(payload: QuestionRequest):
-    try:
-        context = get_context(payload.category, payload.category)
-    except Exception as e:
-        print("RAG CONTEXT ERROR:", e)
-        context = ""
+    cat = normalize_category(payload.category)
+    diff = normalize_difficulty(payload.difficulty)
 
-    prompt = f"""
-You are a professional TOEFL tutor AI.
+    data, source = llm_service.generate_question(cat, diff, payload.mode)
 
-Use the TOEFL material below as reference.
+    # Flatten to the legacy shape: options as an "A. ..." string list.
+    if data.get("section") == "reading":
+        first = (data.get("questions") or [{}])[0]
+        question_text = f"{data.get('passage', '')}\n\n{first.get('question', '')}".strip()
+        options_dict = first.get("options", {})
+        answer = first.get("answer", "A")
+        explanation = first.get("explanation", "")
+    else:
+        question_text = data.get("question", "")
+        options_dict = data.get("options", {})
+        answer = data.get("answer", "A")
+        explanation = data.get("explanation", "")
 
-TOEFL MATERIAL:
-{context}
+    options_list = [
+        f"{letter}. {options_dict.get(letter, '')}"
+        for letter in ("A", "B", "C", "D")
+        if options_dict.get(letter)
+    ]
 
-TASK:
-Generate exactly 1 TOEFL {payload.category} question.
+    return {
+        "question": question_text,
+        "options": options_list,
+        "answer": answer,
+        "explanation": explanation,
+        "difficulty": payload.difficulty,
+        "category": payload.category,
+        "topic": data.get("topic", cat),
+        "estimated_toefl_range": data.get("estimated_toefl_range", estimated_range_for(diff)),
+        "source": source,
+    }
 
-Difficulty:
-{payload.difficulty}
 
-STRICT RULES:
-- The question MUST be about this category: {payload.category}
-- The difficulty MUST be: {payload.difficulty}
-- Generate exactly 4 answer options
-- Each option MUST start with A., B., C., or D.
-- The answer field MUST contain only one letter: A, B, C, or D
-- Add a short explanation
-- Return ONLY valid JSON
-- Do NOT include markdown
-- Do NOT include text outside JSON
-
-CATEGORY GUIDE:
-- Grammar: ask about sentence structure, tense, subject-verb agreement, prepositions, clauses, or grammar correction.
-- Vocabulary: ask about meaning, synonym, antonym, word usage, or context vocabulary.
-- Reading: include a short passage, then ask about main idea, inference, detail, purpose, or reference.
-- Listening: create a short spoken conversation or lecture situation, then ask a listening comprehension question.
-- Speaking: create a TOEFL speaking prompt or choose the best spoken response.
-
-JSON FORMAT:
-{{
-  "question": "...",
-  "options": [
-    "A. ...",
-    "B. ...",
-    "C. ...",
-    "D. ..."
-  ],
-  "answer": "A",
-  "explanation": "..."
-}}
-"""
-
-    try:
-        response = ask_llm_generate(prompt)
-        parsed = clean_ai_json_response(response)
-
-        required_keys = [
-            "question",
-            "options",
-            "answer",
-            "explanation"
-        ]
-
-        for key in required_keys:
-            if key not in parsed:
-                raise ValueError(f"Missing key from AI response: {key}")
-
-        if not isinstance(parsed["options"], list):
-            raise ValueError("Options must be a list")
-
-        if len(parsed["options"]) != 4:
-            raise ValueError("Options must contain exactly 4 choices")
-
-        parsed["answer"] = str(parsed["answer"]).strip().upper()[0]
-
-        if parsed["answer"] not in ["A", "B", "C", "D"]:
-            raise ValueError("Answer must be A, B, C, or D")
-
-        parsed["difficulty"] = payload.difficulty
-        parsed["category"] = payload.category
-
-        return parsed
-
-    except Exception as e:
-        print("QUESTION GENERATION ERROR:", e)
-
-        return get_fallback_question(
-            category=payload.category,
-            difficulty=payload.difficulty
-        )
-
+# ---------------------------------------------------------------------------
+# Legacy API: /evaluate-answer (bilingual feedback)
+# ---------------------------------------------------------------------------
 
 @router.post("/evaluate-answer")
 def evaluate_answer(
     payload: EvaluationRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    correct_option = next(
-        (
-            opt for opt in payload.options
-            if opt.startswith(payload.correct_answer)
-        ),
-        payload.correct_answer
+    correct_text = _resolve_correct_text(payload.correct_answer, payload.options)
+
+    is_correct = (
+        payload.user_answer.strip().upper()[:1]
+        == payload.correct_answer.strip().upper()[:1]
     )
 
-    parsed = ask_llm(
+    feedback = llm_service.generate_explanation(
         question=payload.question,
         options=payload.options,
         user_answer=payload.user_answer,
-        correct_answer=correct_option
+        correct_answer=correct_text,
+        is_correct=is_correct,
+        use_llm=True,
+        category=payload.category,
     )
 
-    is_correct = (
-        payload.user_answer.strip().upper()
-        == payload.correct_answer.strip().upper()
-    )
+    topic = (payload.topic or "").strip() or payload.category
 
-    if not isinstance(parsed, dict):
-        parsed = {
-            "correct_answer": correct_option,
-            "translation": "Translation unavailable.",
-            "explanation": "AI explanation unavailable.",
-            "explanation_id": "Penjelasan AI tidak tersedia.",
-            "why_wrong": "Could not analyze answer.",
-            "why_wrong_id": "Tidak dapat menganalisis jawaban.",
-            "grammar_tip": "Review grammar fundamentals.",
-            "grammar_tip_id": "Tinjau dasar-dasar tata bahasa.",
-            "toefl_tip": "Practice more TOEFL questions.",
-            "toefl_tip_id": "Praktik lebih banyak soal TOEFL."
-        }
-
-    parsed.setdefault("correct_answer", correct_option)
-    parsed.setdefault("translation", "Translation unavailable.")
-    parsed.setdefault("explanation", "AI explanation unavailable.")
-    parsed.setdefault("explanation_id", "Penjelasan AI tidak tersedia.")
-    parsed.setdefault("why_wrong", "Could not analyze answer.")
-    parsed.setdefault("why_wrong_id", "Tidak dapat menganalisis jawaban.")
-    parsed.setdefault("grammar_tip", "Review grammar fundamentals.")
-    parsed.setdefault("grammar_tip_id", "Tinjau dasar-dasar tata bahasa.")
-    parsed.setdefault("toefl_tip", "Practice more TOEFL questions.")
-    parsed.setdefault("toefl_tip_id", "Praktik lebih banyak soal TOEFL.")
-
-    history = PracticeHistory(
+    _save_history(
+        db,
         category=payload.category,
         difficulty=payload.difficulty,
+        topic=topic,
         question=payload.question,
         user_answer=payload.user_answer,
-        correct_answer=correct_option,
+        correct_answer=correct_text,
         is_correct=is_correct,
-        analysis=parsed.get("explanation", ""),
-        grammar_tip=parsed.get("grammar_tip", ""),
-        improvement=parsed.get("toefl_tip", ""),
-        weakness_detected=payload.category
+        feedback=feedback,
     )
-
-    db.add(history)
-    db.commit()
-    db.refresh(history)
 
     return {
         "is_correct": is_correct,
-        "correct_answer": parsed.get("correct_answer", ""),
-        "translation": parsed.get("translation", ""),
-        "explanation": parsed.get("explanation", ""),
-        "explanation_id": parsed.get("explanation_id", ""),
-        "why_wrong": parsed.get("why_wrong", ""),
-        "why_wrong_id": parsed.get("why_wrong_id", ""),
-        "grammar_tip": parsed.get("grammar_tip", ""),
-        "grammar_tip_id": parsed.get("grammar_tip_id", ""),
-        "toefl_tip": parsed.get("toefl_tip", ""),
-        "toefl_tip_id": parsed.get("toefl_tip_id", "")
+        "correct_answer": correct_text,
+        "translation": feedback.get("translation", ""),
+        "explanation": feedback.get("explanation", ""),
+        "explanation_id": feedback.get("explanation_id", ""),
+        "why_wrong": feedback.get("why_wrong", "") if not is_correct else "",
+        "why_wrong_id": feedback.get("why_wrong_id", "") if not is_correct else "",
+        "grammar_tip": feedback.get("grammar_tip", ""),
+        "grammar_tip_id": feedback.get("grammar_tip_id", ""),
+        "toefl_tip": feedback.get("toefl_tip", ""),
+        "toefl_tip_id": feedback.get("toefl_tip_id", ""),
+        "recommendation": llm_service.recommend_for_topic(topic, payload.category),
+        "rag_used": bool(feedback.get("rag_used", False)),
+    }
+
+
+# ---------------------------------------------------------------------------
+# RAG status (for demos / debugging)
+# ---------------------------------------------------------------------------
+
+@router.get("/api/rag/status")
+def rag_status():
+    from app.core import config
+    from app.services import rag_service
+
+    return {
+        "enabled": config.USE_RAG,
+        "ready": rag_service.is_ready(),
+        "top_k": config.RAG_TOP_K,
+        "provider": config.LLM_PROVIDER,
     }

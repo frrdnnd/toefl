@@ -1,0 +1,162 @@
+[
+  {
+    "id": "vocab_adv_001",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "The instructions were so 'ambiguous' that the participants interpreted them in several different ways. The word 'ambiguous' is closest in meaning to",
+    "options": {
+      "A": "detailed",
+      "B": "unclear",
+      "C": "strict",
+      "D": "lengthy"
+    },
+    "answer": "B",
+    "explanation": "Something 'ambiguous' has more than one possible meaning and is therefore unclear. 'Unclear' is the closest meaning."
+  },
+  {
+    "id": "vocab_adv_002",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "Many economists remained 'skeptical' about the accuracy of the optimistic forecast. The word 'skeptical' is closest in meaning to",
+    "options": {
+      "A": "doubtful",
+      "B": "confident",
+      "C": "enthusiastic",
+      "D": "aware"
+    },
+    "answer": "A",
+    "explanation": "To be 'skeptical' is to doubt or question whether something is true. 'Doubtful' is the closest meaning."
+  },
+  {
+    "id": "vocab_adv_003",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "The project required a 'substantial' investment of both time and money. The word 'substantial' is closest in meaning to",
+    "options": {
+      "A": "considerable",
+      "B": "minimal",
+      "C": "uncertain",
+      "D": "temporary"
+    },
+    "answer": "A",
+    "explanation": "'Substantial' means large in amount, size, or importance. 'Considerable' is the closest synonym."
+  },
+  {
+    "id": "vocab_adv_004",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "As resources became scarce, conflict over them seemed almost 'inevitable'. The word 'inevitable' is closest in meaning to",
+    "options": {
+      "A": "avoidable",
+      "B": "unlikely",
+      "C": "unavoidable",
+      "D": "beneficial"
+    },
+    "answer": "C",
+    "explanation": "Something 'inevitable' is certain to happen and cannot be prevented. 'Unavoidable' is the closest meaning."
+  },
+  {
+    "id": "vocab_adv_005",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "The researchers reported only 'preliminary' results, noting that more data was needed. The word 'preliminary' is closest in meaning to",
+    "options": {
+      "A": "final",
+      "B": "initial",
+      "C": "official",
+      "D": "detailed"
+    },
+    "answer": "B",
+    "explanation": "'Preliminary' refers to something that comes before the main or final stage. 'Initial' is the closest meaning."
+  },
+  {
+    "id": "vocab_adv_006",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "Regular exercise can 'diminish' the risk of several chronic diseases. The word 'diminish' is closest in meaning to",
+    "options": {
+      "A": "increase",
+      "B": "reduce",
+      "C": "explain",
+      "D": "ignore"
+    },
+    "answer": "B",
+    "explanation": "To 'diminish' something is to make it smaller or less. 'Reduce' is the closest synonym."
+  },
+  {
+    "id": "vocab_adv_007",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "Over many years, the museum managed to 'acquire' an impressive collection of rare manuscripts. The word 'acquire' is closest in meaning to",
+    "options": {
+      "A": "obtain",
+      "B": "display",
+      "C": "sell",
+      "D": "damage"
+    },
+    "answer": "A",
+    "explanation": "To 'acquire' something is to gain or obtain it. 'Obtain' is the closest synonym."
+  },
+  {
+    "id": "vocab_adv_008",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "Currency values tend to 'fluctuate' in response to political and economic events. The word 'fluctuate' is closest in meaning to",
+    "options": {
+      "A": "remain stable",
+      "B": "rise and fall",
+      "C": "disappear",
+      "D": "strengthen"
+    },
+    "answer": "B",
+    "explanation": "To 'fluctuate' means to change irregularly, going up and down. 'Rise and fall' is the closest meaning."
+  },
+  {
+    "id": "vocab_adv_009",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "The new evidence was 'substantial' enough to 'undermine' the original hypothesis. The word 'undermine' is closest in meaning to",
+    "options": {
+      "A": "support",
+      "B": "weaken",
+      "C": "confirm",
+      "D": "publish"
+    },
+    "answer": "B",
+    "explanation": "To 'undermine' something is to gradually weaken it or make it less effective. 'Weaken' is the closest meaning."
+  },
+  {
+    "id": "vocab_adv_010",
+    "section": "vocabulary",
+    "difficulty": "advanced",
+    "estimated_toefl_range": "550-650",
+    "topic": "vocabulary in context",
+    "question": "The supply of skilled labor fell sharply; 'consequently', wages in the industry rose. The word 'consequently' is closest in meaning to",
+    "options": {
+      "A": "as a result",
+      "B": "in contrast",
+      "C": "for example",
+      "D": "in addition"
+    },
+    "answer": "A",
+    "explanation": "'Consequently' is a transition word showing that one thing happens because of another. 'As a result' is the closest meaning."
+  }
+]
